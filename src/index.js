@@ -3,6 +3,7 @@
 // **********************************
 const client_id = 'c982daaa2a9543e181f3411ed630bc43';
 const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
+const redirect_uri = 'localhost:3000/home';
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -71,6 +72,28 @@ app.get('/', (req, res) => {
 // **********************************
 // -----START SERVER-----
 // **********************************
+
+
+// **********************************
+// -----Authorization functions----
+// **********************************
+function requestAuthorization(){
+  let url = 'https://accounts.spotify.com/authorize';
+  url +=  "?client_id=" + client_id + 
+          "&response_type=code" +
+          "&redirect_uri=" + redirect_uri +
+          "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
+          "&show_dialog=false"    // useres only need to authorize once
+} // gennerates this link: https://accounts.spotify.com/authorize?client_id=c982daaa2a9543e181f3411ed630bc43&response_type=code&redirect_uri=localhost:3000/home&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private&show_dialog=false
+
+function getTokenCode(){
+  var usercode = null;
+  const url = window.location.search;
+  if (url.length > 0){
+      const parse_parameters = new URLSearchParams(window.location.search);
+      usercode = parse_parameters.get('code')
+  }
+}
 
 // starting the server and keeping the connection open to listen for more requests
 app.listen(3000);
