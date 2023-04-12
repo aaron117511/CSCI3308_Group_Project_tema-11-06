@@ -76,7 +76,9 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
 });
-  
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
 // Register
 app.post('/register', async (req, res) => {
   // hash the password using the bcrypt library
@@ -167,5 +169,5 @@ function getTokenCode(){
 }
 
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
