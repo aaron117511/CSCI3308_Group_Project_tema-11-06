@@ -69,6 +69,55 @@ app.get('/', (req, res) => {
     res.render('pages/home.ejs');
   });
 
+app.get('/login', (req, res) => {
+  res.render('pages/login')
+});
+
+app.get('/register', (req, res) => {
+  res.render('pages/register', {});
+});
+  
+// Register
+app.post('/register', async (req, res) => {
+  // hash the password using the bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+  const insertQuery = 'INSERT INTO users (username, password, access_token) VALUES ($1, $2, NULL);';
+
+  db.any(insertQuery, [req.body.username, hash])
+    .then((response) => {
+      res.redirect('/login');
+    })
+    .catch((err) => {
+      res.redirect('/register');
+    });
+});
+  
+// Login
+app.post('/login', async (req, res) => {
+  // check if password from request matches with password in DB
+  const findQuery = `SELECT * FROM users WHERE username = '${req.body.username}';`;
+  const data = await db.any(findQuery);
+  const user = data[0];
+  if (user != null) {
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (match) {
+      req.session.user = user;
+      req.session.save();
+      res.redirect('/');
+    }
+    else {
+      res.render('pages/login', {
+        message: 'Incorrect username or password',
+        error: true,
+      });
+    }
+  }
+  else if (user == null) {
+    res.redirect('/register');
+  }
+});
+
+
 app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
