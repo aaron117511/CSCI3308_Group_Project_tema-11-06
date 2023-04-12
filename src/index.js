@@ -3,7 +3,7 @@
 // **********************************
 const client_id = 'c982daaa2a9543e181f3411ed630bc43';
 const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
-const redirect_uri = 'localhost:3000/home';
+const redirect_uri = 'http://localhost:3000';
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -85,7 +85,7 @@ app.post('/register', async (req, res) => {
 
   db.any(insertQuery, [req.body.username, hash])
     .then((response) => {
-      res.redirect('/login');
+      res.redirect(requestAuthorization());
     })
     .catch((err) => {
       res.redirect('/register');
@@ -132,7 +132,8 @@ function requestAuthorization(){
           "&response_type=code" +
           "&redirect_uri=" + redirect_uri +
           "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
-          "&show_dialog=false"    // useres only need to authorize once
+          "&show_dialog=false";    // useres only need to authorize once
+  return url;
 } // gennerates this link: https://accounts.spotify.com/authorize?client_id=c982daaa2a9543e181f3411ed630bc43&response_type=code&redirect_uri=localhost:3000/home&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private&show_dialog=false
 
 function getTokenCode(){
