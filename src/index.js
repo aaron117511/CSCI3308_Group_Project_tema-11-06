@@ -68,6 +68,28 @@ app.get('/', (req, res) => {
     res.render('pages/home.ejs');
   });
 
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  db.any('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING * ;', [req.body.username, hash])
+    .then(function (data) {
+      res.status(201).json({
+        status: 'success',
+        data: data,
+        message: 'account registered successfully'
+      });
+    })
+    .catch(function (err) {
+      res.status(500).json({
+        status: 'failed',
+        data: data,
+        message: 'Account could not be registered.'
+      })
+      return console.log(err);
+    });
+});
+
 // **********************************
 // -----START SERVER-----
 // **********************************
