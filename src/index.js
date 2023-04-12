@@ -3,7 +3,7 @@
 // **********************************
 const client_id = 'c982daaa2a9543e181f3411ed630bc43';
 const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
-const redirect_uri = 'localhost:3000/home';
+const redirect_uri = 'localhost:3000';
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
