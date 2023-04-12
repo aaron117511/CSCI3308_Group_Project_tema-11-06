@@ -1,7 +1,8 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-
+const client_id = 'c982daaa2a9543e181f3411ed630bc43';
+const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -115,6 +116,28 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  db.any('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING * ;', [req.body.username, hash])
+    .then(function (data) {
+      res.status(201).json({
+        status: 'success',
+        data: data,
+        message: 'account registered successfully'
+      });
+    })
+    .catch(function (err) {
+      res.status(500).json({
+        status: 'failed',
+        data: data,
+        message: 'Account could not be registered.'
+      })
+      return console.log(err);
+    });
+});
 
 // **********************************
 // -----START SERVER-----

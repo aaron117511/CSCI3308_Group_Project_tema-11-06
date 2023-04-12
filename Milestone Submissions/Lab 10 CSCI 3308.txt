@@ -1,0 +1,88 @@
+﻿Team 6
+
+
+Team Name: TBD
+
+
+Team Members 
+Berkley Larson, Aaron Curtis-Johnston, Andrew Yonan, Jamison Wilder, River Jordan
+
+
+Application Name  
+Better Wrapped
+
+
+Application Description
+Our application will be a Spotify Statistics and Recommendation App. The webpage will display some basic statistics based on users’ Spotify listening, using the Spotify API. Specifically, the statistics page will show users’ top artists and genres over a weekly period. UI-Features may include stat-visuals such as pie-charts, bar-graphs, or timelines to show various distributions of the statistics over the current week (daily activity / number of listens / most listened-to song / most listened-to artist). This project will build on Spotify’s current Wrapped software, which only provides yearly updates on these statistics.  Additional features will include song recommendations based on users’ most listened-to genres and songs. Users will be able to create new playlists based on these recommendations and add it to their account. 
+The website will link to Spotify’s authentication page and provide user authentication keys to the database in order to allow users to view data specific to them. Users will be able to customize their views in order to see specific data that they are interested in. User’s authentication key will be saved in the database so they can return to the site without logging into spotify again. The site will visually display album covers and artist images in order to make the UI more effective.
+
+
+
+
+Vision Statement 
+For avid listeners, who enjoy seeing insights. The “Better Wrapped” is a tool to view one’s personal listening trends and get suggestions. Unlike ‘Spotify wrapped’, our product allows users to see weekly listening stats instead of yearly summaries.
+
+
+Version Control
+Github Link: https://github.com/aaron117511/CSCI3308_Group_Project_tema-11-06 
+
+
+Development Methodology:
+We will use the Agile methodology for maximum flexibility and adaptability (project board prepared on github).
+
+
+Communication Plan 
+Text / direct message
+
+
+Meeting Plan
+Team meeting: Wednesdays, 2:00pm, In-Person, ECES 114
+TA meeting: Mondays, 2:15pm, Remote
+
+
+Use Case Diagram
+  
+
+Wireframes:
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+Precise page wireframes:
+
+
+HOME PAGE:
+
+
+  
+
+
+
+REGISTER / LOGIN PAGE  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INFO / STAT PAGE
