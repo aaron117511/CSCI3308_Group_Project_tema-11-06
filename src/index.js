@@ -103,22 +103,42 @@ app.post('/login', async (req, res) => {
   if (user != null) {
     const match = await bcrypt.compare(req.body.password, user.password);
     if (match) {
-      res.json({status: 'success', message: 'Success'});
       req.session.user = user;
       req.session.save();
-      res.redirect('/');
+      res.status(200).json({
+        status: 'success',
+        data: data,
+        message: 'Success',
+      });
+      // res.redirect('/', {
+      //   status: 'success',
+      //   message: 'Success'
+      // });
     }
     else {
-      res.json({status: 'failed', message: 'Authentication Failed'})
-      res.render('pages/login', {
-        message: 'Incorrect username or password',
-        error: true,
+      res.status(400).json({
+        status: 'failed',
+        data: data,
+        message: 'Authentication Failed - Incorrect Password',
       });
+      // res.render('pages/login', {
+      //   status: 'failed',
+      //   message: 'Authentication Failed',
+      //   error: true,
+      // });
     }
   }
   else if (user == null) {
-    res.json({status: 'failed', message: 'Failed to login'})
-    res.redirect('/register');
+    res.status(400).json({
+      status: 'failed',
+      data: data,
+      message: 'User not found in database',
+    });
+    // res.redirect('/register', {
+    //   status: 'failed',
+    //   message: 'Failed to login',
+    //   error: true
+    // });
   }
 });
 

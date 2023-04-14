@@ -1,5 +1,7 @@
-CREATE TABLE users(
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE IF NOT EXISTS users(
   username VARCHAR(50) PRIMARY KEY,
-  password CHAR(60) NOT NULL,
-  access_token CHAR(60)
+  password VARCHAR(60) NOT NULL,
+  access_token VARCHAR(60)
 );
+

@@ -39,14 +39,14 @@ describe('Server!', () => {
       });
   });
 
-  it('Negative : /add_user. Checking invalid name', done => {
+  it('Negative : /login. Checking invalid name', done => {
     chai
       .request(server)
-      .post('/add_user')
+      .post('/login')
       .send({username: "John Doe", password: '4321', access_token: 'APIc00L717'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('Failed to login');
+        expect(res.body.message).to.equals('Authentication Failed');
         done();
       });
   });
