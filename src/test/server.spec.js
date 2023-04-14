@@ -26,27 +26,37 @@ describe('Server!', () => {
   // ===========================================================================
   // TO-DO: Part A Login unit test case
   // ===========================================================================
-  //We are checking POST /login API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
+  // NOTE -- John Doe must be a user in the database for this test to pass. Check insert.sql to ensure this is true
+  //We are checking POST /login API by passing the user info in the correct order.
   it('positive : /login', done => {
     chai
       .request(server)
       .post('/login')
-      .send({username: 'John Doe', password: '1234', access_token: 'APIc00L717'})
+      .send({username: 'John Doe', password: '1234'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('Success');
         done();
       });
   });
 
-  it('Negative : /login. Checking invalid name', done => {
+  it('Negative : /login. Checking invalid password', done => {
     chai
       .request(server)
       .post('/login')
-      .send({username: "John Doe", password: '4321', access_token: 'APIc00L717'})
+      .send({username: "John Doe", password: '4321'})
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('Authentication Failed');
+        expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it('Negative : /login. Checking invalid username', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({username: "Johnny Doe", password: '1234'})
+      .end((err, res) => {
+        expect(res).to.have.status(404);
         done();
       });
   });

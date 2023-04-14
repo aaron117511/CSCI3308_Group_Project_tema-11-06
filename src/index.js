@@ -105,40 +105,23 @@ app.post('/login', async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save();
-      res.status(200).json({
-        status: 'success',
-        data: data,
-        message: 'Success',
-      });
-      // res.redirect('/', {
-      //   status: 'success',
-      //   message: 'Success'
-      // });
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User logged in successfully');
+      res.status(200).redirect('/');
     }
     else {
-      res.status(400).json({
-        status: 'failed',
-        data: data,
-        message: 'Authentication Failed - Incorrect Password',
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - Incorrect Password');
+      res.status(401).render('pages/login', {
+        message: 'Authentication failed',
+        error: true
       });
-      // res.render('pages/login', {
-      //   status: 'failed',
-      //   message: 'Authentication Failed',
-      //   error: true,
-      // });
     }
   }
   else if (user == null) {
-    res.status(400).json({
-      status: 'failed',
-      data: data,
-      message: 'User not found in database',
+    console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
+    res.status(404).render('pages/login', {
+      message: 'User not found',
+      error: true
     });
-    // res.redirect('/register', {
-    //   status: 'failed',
-    //   message: 'Failed to login',
-    //   error: true
-    // });
   }
 });
 
