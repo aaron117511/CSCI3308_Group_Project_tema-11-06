@@ -25,27 +25,55 @@ describe('Server!', () => {
 
   // ===========================================================================
   // TO-DO: Part A Login unit test case
-    // ===========================================================================
-    it('positive : /register', done => {
-        chai
-          .request(server)
-          .post('/register')
-          .send({id: 5, name: 'John Doe', dob: '2020-02-20'})
-          .end((err, res) => {
-            expect(res).to.have.status(200);
-            expect(res.body.message).to.equals('Success');
-            done();
-          });
+  // ===========================================================================
+  //We are checking POST /login API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
+  it('positive : /login', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({username: 'John Doe', password: '1234', access_token: 'APIc00L717'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equals('Success');
+        done();
       });
-      it('Negative : /register. Checking invalid name', done => {
-        chai
-          .request(server)
-          .post('/register')
-          .send({id: '5', name: 10, dob: '2020-02-20'})
-          .end((err, res) => {
-            expect(res).to.have.status(200);
-            expect(res.body.message).to.equals('Invalid input');
-            done();
-          });
+  });
+
+  it('Negative : /add_user. Checking invalid name', done => {
+    chai
+      .request(server)
+      .post('/add_user')
+      .send({username: "John Doe", password: '4321', access_token: 'APIc00L717'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equals('Failed to login');
+        done();
       });
+  });
+
+
+
+
+    // it('positive : /register', done => {
+    //     chai
+    //       .request(server)
+    //       .post('/register')
+    //       .send({id: 5, name: 'John Doe', dob: '2020-02-20'})
+    //       .end((err, res) => {
+    //         expect(res).to.have.status(200);
+    //         expect(res.body.message).to.equals('Success');
+    //         done();
+    //       });
+    //   });
+    //   it('Negative : /register. Checking invalid name', done => {
+    //     chai
+    //       .request(server)
+    //       .post('/register')
+    //       .send({id: '5', name: 10, dob: '2020-02-20'})
+    //       .end((err, res) => {
+    //         expect(res).to.have.status(200);
+    //         expect(res.body.message).to.equals('Invalid input');
+    //         done();
+    //       });
+    //   });
 });

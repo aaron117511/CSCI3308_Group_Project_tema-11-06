@@ -103,11 +103,13 @@ app.post('/login', async (req, res) => {
   if (user != null) {
     const match = await bcrypt.compare(req.body.password, user.password);
     if (match) {
+      res.json({status: 'success', message: 'Success'});
       req.session.user = user;
       req.session.save();
       res.redirect('/');
     }
     else {
+      res.json({status: 'failed', message: 'Authentication Failed'})
       res.render('pages/login', {
         message: 'Incorrect username or password',
         error: true,
@@ -115,6 +117,7 @@ app.post('/login', async (req, res) => {
     }
   }
   else if (user == null) {
+    res.json({status: 'failed', message: 'Failed to login'})
     res.redirect('/register');
   }
 });
