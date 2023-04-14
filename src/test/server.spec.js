@@ -61,29 +61,24 @@ describe('Server!', () => {
       });
   });
 
-
-
-
-    // it('positive : /register', done => {
-    //     chai
-    //       .request(server)
-    //       .post('/register')
-    //       .send({id: 5, name: 'John Doe', dob: '2020-02-20'})
-    //       .end((err, res) => {
-    //         expect(res).to.have.status(200);
-    //         expect(res.body.message).to.equals('Success');
-    //         done();
-    //       });
-    //   });
-    //   it('Negative : /register. Checking invalid name', done => {
-    //     chai
-    //       .request(server)
-    //       .post('/register')
-    //       .send({id: '5', name: 10, dob: '2020-02-20'})
-    //       .end((err, res) => {
-    //         expect(res).to.have.status(200);
-    //         expect(res.body.message).to.equals('Invalid input');
-    //         done();
-    //       });
-    //   });
+  it('positive : /register. Checking successful registration', done => {
+      chai
+        .request(server)
+        .post('/register')
+        .send({username: 'Register Man', password: '5678'})
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          done();
+        });
+    });
+    it('Negative : /register. Checking failed registration', done => {
+      chai
+        .request(server)
+        .post('/register')
+        .send({username: '', password: ''})
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          done();
+        });
+    });
 });

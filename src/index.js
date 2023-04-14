@@ -81,16 +81,18 @@ app.get('/welcome', (req, res) => {
 });
 // Register
 app.post('/register', async (req, res) => {
-  // hash the password using the bcrypt library
+  //hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
-  const insertQuery = 'INSERT INTO users (username, password, access_token) VALUES ($1, $2, NULL);';
 
-  db.any(insertQuery, [req.body.username, hash])
-    .then((response) => {
-      res.redirect('/login');
+  db.any('INSERT INTO users (username, password) VALUES ($1, $2);', [req.body.username, hash])
+    .then(function (data) {
+      console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
+      res.status(201).render('pages/login');
     })
-    .catch((err) => {
-      res.redirect('/register');
+    .catch(function (err) {
+      console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
+      console.log(err);
+      res.status(500).render('pages/register');
     });
 });
   
@@ -110,42 +112,13 @@ app.post('/login', async (req, res) => {
     }
     else {
       console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - Incorrect Password');
-      res.status(401).render('pages/login', {
-        message: 'Authentication failed',
-        error: true
-      });
+      res.status(401).render('pages/login');
     }
   }
   else if (user == null) {
     console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
-    res.status(404).render('pages/login', {
-      message: 'User not found',
-      error: true
-    });
+    res.status(404).render('pages/login');
   }
-});
-
-
-app.post('/register', async (req, res) => {
-  //hash the password using bcrypt library
-  const hash = await bcrypt.hash(req.body.password, 10);
-
-  db.any('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING * ;', [req.body.username, hash])
-    .then(function (data) {
-      res.status(201).json({
-        status: 'success',
-        data: data,
-        message: 'account registered successfully'
-      });
-    })
-    .catch(function (err) {
-      res.status(500).json({
-        status: 'failed',
-        data: data,
-        message: 'Account could not be registered.'
-      })
-      return console.log(err);
-    });
 });
 
 // **********************************
