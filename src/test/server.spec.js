@@ -26,7 +26,7 @@ describe('Server!', () => {
   // ===========================================================================
   // TO-DO: Part A Login unit test case
   // ===========================================================================
-  // NOTE -- John Doe must be a user in the database for this test to pass. Check insert.sql to ensure this is true
+  // NOTE -- John Doe with a password of 1234 must be a user in the database for this test to pass. Check insert.sql to ensure this is true
   //We are checking POST /login API by passing the user info in the correct order.
   it('positive : /login', done => {
     chai
@@ -61,6 +61,7 @@ describe('Server!', () => {
       });
   });
 
+  // These tests are for the /register api
   it('positive : /register. Checking successful registration', done => {
       chai
         .request(server)
@@ -71,13 +72,14 @@ describe('Server!', () => {
           done();
         });
     });
+    // Null information is passed
     it('Negative : /register. Checking failed registration', done => {
       chai
         .request(server)
         .post('/register')
         .send({username: '', password: ''})
         .end((err, res) => {
-          expect(res).to.have.status(500);
+          expect(res).to.have.status(400);
           done();
         });
     });

@@ -82,18 +82,35 @@ app.get('/welcome', (req, res) => {
 // Register
 app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
+  const user = await db.any(`SELECT * FROM users WHERE username = '${req.body.username}';`);
   const hash = await bcrypt.hash(req.body.password, 10);
+  console.log(user);
 
-  db.any('INSERT INTO users (username, password) VALUES ($1, $2);', [req.body.username, hash])
-    .then(function (data) {
-      console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
-      res.status(201).render('pages/login');
-    })
-    .catch(function (err) {
-      console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
-      console.log(err);
-      res.status(500).render('pages/register');
-    });
+  // Ensure non-null data is entered as registration information
+  if (!req.body.username || !req.body.password) {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: NULL was passed into API Route');
+    res.status(400).render('pages/register');
+  }
+
+  // Ensure current user does not already exist in database
+  else if (user != '') {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be reigstered: User already exists in database');
+    res.status(400).render('pages/register');
+  }
+  
+  // After input validation, insert user into database
+  else {
+    db.any('INSERT INTO users (username, password) VALUES ($1, $2);', [req.body.username, hash])
+      .then(function (data) {
+        console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
+        res.status(201).render('pages/login');
+      })
+      .catch(function (err) {
+        console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
+        console.log(err);
+        res.status(500).render('pages/register');
+      });
+  }
 });
   
 // Login
