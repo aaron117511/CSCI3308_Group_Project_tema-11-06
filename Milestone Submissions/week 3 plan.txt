@@ -1,0 +1,7 @@
+WEEK 3 PLAN
+1. Create function for refreshing authorization tokens
+2. begining writing code for API requests from spotify
+  a. get at least one call completely done
+  b. begin on atleast 3 more
+3. make more progress on HTML and page formating
+4. continue writing tests as we see fit for functions and api calls
