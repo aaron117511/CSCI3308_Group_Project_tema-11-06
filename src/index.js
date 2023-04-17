@@ -1,8 +1,6 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-const client_id = 'c982daaa2a9543e181f3411ed630bc43';
-const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
 const redirect_uri = 'http://localhost:3000/authentication';
 const express = require('express'); // To build an application server or API
 const app = express();
@@ -64,6 +62,29 @@ app.use(
 // **********************************
 // -----API ROUTES-----
 // **********************************
+//the home and extras pages should only be displayed if the user is logged in
+//to do this we need to check if the user is logged in before displaying the page
+
+//for the home page
+app.get('/home', (req, res) => {
+  if (req.session.user) {
+    res.render('pages/home.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
+});
+
+//for the extras page
+app.get('/extras', (req, res) => {
+  if (req.session.user) {
+    res.render('pages/extras.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
+});
+    
 
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
@@ -76,21 +97,47 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
 });
-  
+
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
 // Register
 app.post('/register', async (req, res) => {
-  // hash the password using the bcrypt library
+  //hash the password using bcrypt library
+  const user_returned = await db.any(`SELECT * FROM users WHERE username = '${req.body.username}';`);
+  const user = user_returned[0];
   const hash = await bcrypt.hash(req.body.password, 10);
   const insertQuery = 'INSERT INTO users (username, password, access_token, refresh_token) VALUES ($1, $2, NULL, NULL) RETURNING *;';
-  db.any(insertQuery, [req.body.username, hash])
+
+  // Ensure non-null data is entered as registration information
+  if (!req.body.username || !req.body.password) {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: NULL was passed into API Route');
+    res.status(400).render('pages/register');
+  }
+
+  // After input validation, insert user into database
+  else if (user == null) {
+    db.any(insertQuery, [req.body.username, hash])
     .then((response) => {
+      console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
       req.session.user = response[0];
       req.session.save();
+      res.status(201);
       res.redirect(requestAuthorization());
     })
     .catch((err) => {
-      res.redirect('/register');
+      console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
+      console.log(err);
+      res.status(500).render('pages/register');
     });
+  }
+
+  // Ensure current user does not already exist in database
+  else {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: User already exists in database');
+    res.status(400).render('pages/register');
+  }
 });
   
 // Login
@@ -104,17 +151,17 @@ app.post('/login', async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save();
-      res.redirect('/');
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User logged in successfully');
+      res.status(200).redirect('/');
     }
     else {
-      res.render('pages/login', {
-        message: 'Incorrect username or password',
-        error: true,
-      });
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - Incorrect Password');
+      res.status(401).render('pages/login');
     }
   }
   else if (user == null) {
-    res.redirect('/register');
+    console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
+    res.status(404).render('pages/login');
   }
 });
 
@@ -140,8 +187,8 @@ app.get('/authentication', async (req, res) => {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         auth: {
-          username: client_id,
-          password: client_secret
+          username: process.env.CLIENT_ID,
+          password: process.env.CLIENT_SECRET
         }
       })
       .then(response => {
@@ -177,7 +224,7 @@ app.get('/authentication', async (req, res) => {
 // **********************************
 function requestAuthorization(){
   let url = 'https://accounts.spotify.com/authorize';
-  url +=  "?client_id=" + client_id + 
+  url +=  "?client_id=" + process.env.CLIENT_ID + 
           "&response_type=code" +
           "&redirect_uri=" + redirect_uri +
           "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
@@ -196,5 +243,5 @@ function getTokenCode(){
 }
 
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');

@@ -1,0 +1,2 @@
+--This inserts a dummy user that is for test cases. This is for Lab 11. The password for this user is '1234', with bcrypt hashing 10 times.
+INSERT INTO users (username, password, access_token) VALUES ('John Doe', '$2b$10$//XMfFR4vdEPtNL6hFiA.eDBKdePWpultNy5imyk8gjrNMFc0YHVC', 'APIc00L717');
