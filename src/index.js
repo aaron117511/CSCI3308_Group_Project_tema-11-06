@@ -3,7 +3,7 @@
 // **********************************
 const client_id = 'c982daaa2a9543e181f3411ed630bc43';
 const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
-const redirect_uri = 'http://localhost:3000';
+const redirect_uri = 'http://localhost:3000/authentication';
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -81,10 +81,11 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   // hash the password using the bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
-  const insertQuery = 'INSERT INTO users (username, password, access_token) VALUES ($1, $2, NULL);';
-
+  const insertQuery = 'INSERT INTO users (username, password, access_token, refresh_token) VALUES ($1, $2, NULL, NULL) RETURNING *;';
   db.any(insertQuery, [req.body.username, hash])
     .then((response) => {
+      req.session.user = response[0];
+      req.session.save();
       res.redirect(requestAuthorization());
     })
     .catch((err) => {
@@ -118,6 +119,54 @@ app.post('/login', async (req, res) => {
 });
 
 
+app.get('/authentication', async (req, res) => {
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+  var update_query = `UPDATE users SET access_token = $1, refresh_token = $2 WHERE username = $3 RETURNING *;`;
+
+  if (state === null) {
+    res.redirect('/');
+  } 
+  else {
+    await axios({
+        url: `https://accounts.spotify.com/api/token`,
+        method: 'post',
+        data: {
+          code: code,
+          redirect_uri: redirect_uri,
+          grant_type: 'authorization_code'
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        auth: {
+          username: client_id,
+          password: client_secret
+        }
+      })
+      .then(response => {
+        db.any(update_query, [
+          response.data.access_token, 
+          response.data.refresh_token, 
+          req.session.user.username
+        ])
+          .then(updated => {
+            req.session.user = updated[0];
+            req.session.save();
+            res.redirect('/');
+          })
+          .catch(err => {
+            console.log(err);
+            res.redirect('/');
+          });
+      })
+      .catch(error => {
+        console.log(error);
+        res.redirect('/');
+      });
+  }
+});
+
 // **********************************
 // -----START SERVER-----
 // **********************************
@@ -132,9 +181,10 @@ function requestAuthorization(){
           "&response_type=code" +
           "&redirect_uri=" + redirect_uri +
           "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
-          "&show_dialog=false";    // useres only need to authorize once
+          "&show_dialog=false" +
+          "&state=aIler30Bwjxby4pp";    // useres only need to authorize once
   return url;
-} // gennerates this link: https://accounts.spotify.com/authorize?client_id=c982daaa2a9543e181f3411ed630bc43&response_type=code&redirect_uri=localhost:3000/home&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private&show_dialog=false
+} //
 
 function getTokenCode(){
   var usercode = null;
