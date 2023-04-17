@@ -1,6 +1,32 @@
-<%- include ('../partials/header') %>
+<!-- <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 <main>
 
 </main>
-<%- include ('../partials/footer') %>
+<%- include ('../partials/footer') %> -->
+
+
+
+<%- include('../partials/header') %>
+<%- include('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <h1>Welcome to Better Wrapped</h1>
+    <h2>Select a timeline:</h2>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+        Select Timeline
+      </button>
+      <div class="dropdown-menu" >
+        <a class="dropdown-item" href="#">Timeline 1</a>
+        <a class="dropdown-item" href="#">Timeline 2</a>
+        <a class="dropdown-item" href="#">Timeline 3</a>
+        <a class="dropdown-item" href="#">Timeline 4</a>
+      </div>
+    </div>
+    <!-- Spotify API call goes here -->
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
