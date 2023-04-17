@@ -76,20 +76,41 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
 });
-  
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
 // Register
 app.post('/register', async (req, res) => {
-  // hash the password using the bcrypt library
+  //hash the password using bcrypt library
+  const user = await db.any(`SELECT * FROM users WHERE username = '${req.body.username}';`);
   const hash = await bcrypt.hash(req.body.password, 10);
-  const insertQuery = 'INSERT INTO users (username, password, access_token) VALUES ($1, $2, NULL);';
+  console.log(user);
 
-  db.any(insertQuery, [req.body.username, hash])
-    .then((response) => {
-      res.redirect('/login');
-    })
-    .catch((err) => {
-      res.redirect('/register');
-    });
+  // Ensure non-null data is entered as registration information
+  if (!req.body.username || !req.body.password) {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: NULL was passed into API Route');
+    res.status(400).render('pages/register');
+  }
+
+  // Ensure current user does not already exist in database
+  else if (user != '') {
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be reigstered: User already exists in database');
+    res.status(400).render('pages/register');
+  }
+  
+  // After input validation, insert user into database
+  else {
+    db.any('INSERT INTO users (username, password) VALUES ($1, $2);', [req.body.username, hash])
+      .then(function (data) {
+        console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
+        res.status(201).render('pages/login');
+      })
+      .catch(function (err) {
+        console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
+        console.log(err);
+        res.status(500).render('pages/register');
+      });
+  }
 });
   
 // Login
@@ -103,20 +124,19 @@ app.post('/login', async (req, res) => {
     if (match) {
       req.session.user = user;
       req.session.save();
-      res.redirect('/');
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User logged in successfully');
+      res.status(200).redirect('/');
     }
     else {
-      res.render('pages/login', {
-        message: 'Incorrect username or password',
-        error: true,
-      });
+      console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - Incorrect Password');
+      res.status(401).render('pages/login');
     }
   }
   else if (user == null) {
-    res.redirect('/register');
+    console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
+    res.status(404).render('pages/login');
   }
 });
-
 
 // **********************************
 // -----START SERVER-----
@@ -145,5 +165,5 @@ function getTokenCode(){
 }
 
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
