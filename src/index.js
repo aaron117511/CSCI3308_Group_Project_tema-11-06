@@ -64,6 +64,29 @@ app.use(
 // **********************************
 // -----API ROUTES-----
 // **********************************
+//the home and extras pages should only be displayed if the user is logged in
+//to do this we need to check if the user is logged in before displaying the page
+
+//for the home page
+app.get('/home', (req, res) => {
+  if (req.session.user) {
+    res.render('pages/home.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
+});
+
+//for the extras page
+app.get('/extras', (req, res) => {
+  if (req.session.user) {
+    res.render('pages/extras.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
+});
+    
 
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
@@ -117,6 +140,16 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//this is to display the home page
+
+app.get('/home', (req, res) => {
+  res.render('pages/home.ejs');
+});
+
+//to display the extras page
+app.get('/extras', (req, res) => {
+  res.render('pages/extras.ejs');
+});
 
 // **********************************
 // -----START SERVER-----
