@@ -68,12 +68,7 @@ app.use(
 
 //for the home page
 app.get('/home', (req, res) => {
-  if (req.session.user) {
-    res.render('pages/home.ejs');
-  }
-  else {
-    res.redirect('/login');
-  }
+  res.render('pages/home.ejs');
 });
 
 //for the extras page
@@ -85,8 +80,16 @@ app.get('/extras', (req, res) => {
     res.redirect('/login');
   }
 });
-    
 
+app.get('/yourReport', (req,res) => {
+  if (req.session.user) {
+    res.render('pages/yourReport.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
+})
+    
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
   });
@@ -97,10 +100,6 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
-});
-
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
 });
 
 app.get('/home_img', (req, res) => {
