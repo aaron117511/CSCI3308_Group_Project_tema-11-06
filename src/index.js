@@ -1,11 +1,11 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-const client_id = 'c982daaa2a9543e181f3411ed630bc43';
-const client_secret = '1cac4bc9ab0b42259e9e33c66e771df4';
-const redirect_uri = 'localhost:3000/home';
+const redirect_uri = 'http://localhost:3000/authentication';
+const apiUrl = "https://api.spotify.com/v1/me"
 const express = require('express'); // To build an application server or API
 const app = express();
+const path = require('path');
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
@@ -69,12 +69,7 @@ app.use(
 
 //for the home page
 app.get('/home', (req, res) => {
-  if (req.session.user) {
-    res.render('pages/home.ejs');
-  }
-  else {
-    res.redirect('/login');
-  }
+  res.render('pages/home.ejs');
 });
 
 //for the extras page
@@ -96,9 +91,7 @@ app.get('/yourReport', (req, res) => {
     res.redirect('/login');
   }
 });
-
     
-
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
   });
@@ -110,15 +103,21 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
 });
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
+
+app.get('/home_img', (req, res) => {
+  const options = {
+      root: path.join(__dirname)
+  };
+  res.sendFile('/resources/img/home_page.jpg', options);
 });
+
 // Register
 app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
-  const user = await db.any(`SELECT * FROM users WHERE username = '${req.body.username}';`);
+  const user_returned = await db.any(`SELECT * FROM users WHERE username = '${req.body.username}';`);
+  const user = user_returned[0];
   const hash = await bcrypt.hash(req.body.password, 10);
-  console.log(user);
+  const insertQuery = 'INSERT INTO users (username, password, access_token, refresh_token) VALUES ($1, $2, NULL, NULL) RETURNING *;';
 
   // Ensure non-null data is entered as registration information
   if (!req.body.username || !req.body.password) {
@@ -126,24 +125,27 @@ app.post('/register', async (req, res) => {
     res.status(400).render('pages/register');
   }
 
-  // Ensure current user does not already exist in database
-  else if (user != '') {
-    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be reigstered: User already exists in database');
-    res.status(400).render('pages/register');
-  }
-  
   // After input validation, insert user into database
+  else if (user == null) {
+    db.any(insertQuery, [req.body.username, hash])
+    .then((response) => {
+      console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
+      req.session.user = response[0];
+      req.session.save();
+      res.status(201);
+      res.redirect(requestAuthorization());
+    })
+    .catch((err) => {
+      console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
+      console.log(err);
+      res.status(500).render('pages/register');
+    });
+  }
+
+  // Ensure current user does not already exist in database
   else {
-    db.any('INSERT INTO users (username, password) VALUES ($1, $2);', [req.body.username, hash])
-      .then(function (data) {
-        console.log('CONSOLE.LOG FROM INDEX.JS --- Account was registered successfully');
-        res.status(201).render('pages/login');
-      })
-      .catch(function (err) {
-        console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
-        console.log(err);
-        res.status(500).render('pages/register');
-      });
+    console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: User already exists in database');
+    res.status(400).render('pages/register');
   }
 });
   
@@ -172,6 +174,83 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/login.ejs');
+  console.log("Logged out successfully");
+})
+
+app.get('/authentication', async (req, res) => {
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+  var update_query = `UPDATE users SET access_token = $1, refresh_token = $2 WHERE username = $3 RETURNING *;`;
+
+  if (state === null) {
+    res.redirect('/');
+  } 
+  else {
+    await axios({
+        url: `https://accounts.spotify.com/api/token`,
+        method: 'post',
+        data: {
+          code: code,
+          redirect_uri: redirect_uri,
+          grant_type: 'authorization_code'
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        auth: {
+          username: process.env.CLIENT_ID,
+          password: process.env.CLIENT_SECRET
+        }
+      })
+      .then(response => {
+        db.any(update_query, [
+          response.data.access_token, 
+          response.data.refresh_token, 
+          req.session.user.username
+        ])
+          .then(updated => {
+            req.session.user = updated[0];
+            req.session.save();
+            res.redirect('/');
+          })
+          .catch(err => {
+            console.log(err);
+            res.redirect('/');
+          });
+      })
+      .catch(error => {
+        console.log(error);
+        res.redirect('/');
+      });
+  }
+});
+
+
+
+
+// To check status use this.status
+        // to access data use datd.<element id>
+function reqListener() {
+  console.log(this.responseText);
+}
+function callApi(endpoint, callType, body){
+  const req = new XMLHttpRequest();
+  req.onload = () => {
+    console.log(req.responseXML);
+  }
+  req.addEventListener("GET", reqListener);
+  req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
+  req.open(callType, endpoint);
+  req.send(body);
+}
+
+        
+
+
+
 
 // **********************************
 // -----START SERVER-----
@@ -183,12 +262,14 @@ app.post('/login', async (req, res) => {
 // **********************************
 function requestAuthorization(){
   let url = 'https://accounts.spotify.com/authorize';
-  url +=  "?client_id=" + client_id + 
+  url +=  "?client_id=" + process.env.CLIENT_ID + 
           "&response_type=code" +
           "&redirect_uri=" + redirect_uri +
           "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
-          "&show_dialog=false"    // useres only need to authorize once
-} // gennerates this link: https://accounts.spotify.com/authorize?client_id=c982daaa2a9543e181f3411ed630bc43&response_type=code&redirect_uri=localhost:3000/home&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private&show_dialog=false
+          "&show_dialog=false" +
+          "&state=aIler30Bwjxby4pp";    // useres only need to authorize once
+  return url;
+} //
 
 function getTokenCode(){
   var usercode = null;
