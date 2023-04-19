@@ -220,11 +220,19 @@ function reqListener() {
 }
 function callApi(endpoint, callType, body){
   const req = new XMLHttpRequest();
-  req.addEventListener(callType, reqListener);
+  req.onload = () => {
+    console.log(req.responseXML);
+  }
+  req.addEventListener("GET", reqListener);
+  req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
   req.open(callType, endpoint);
   req.send(body);
-
 }
+
+        // To check status use this.status
+        // to access data use datd.<element id>
+
+
 
 
 // **********************************
