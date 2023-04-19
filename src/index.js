@@ -4,6 +4,7 @@
 const redirect_uri = 'http://localhost:3000/authentication';
 const express = require('express'); // To build an application server or API
 const app = express();
+const path = require('path');
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
@@ -100,6 +101,13 @@ app.get('/register', (req, res) => {
 
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
+});
+
+app.get('/home_img', (req, res) => {
+  const options = {
+      root: path.join(__dirname)
+  };
+  res.sendFile('/resources/img/home_page.jpg', options);
 });
 
 // Register
