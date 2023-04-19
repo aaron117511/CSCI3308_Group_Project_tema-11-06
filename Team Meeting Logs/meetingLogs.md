@@ -17,8 +17,9 @@ During this meeting we, merged branches to main and updated eachother on progres
 
 Issues being worked on by each team member:
 
-Aaron: callApi function and refresh tokens\n
-Andrew: testing and streamlining the UI\n
-Berkley: authentication\n
-Jamison: user's top track and artist apis\n
-River: Report page tab conectivity\n
+Aaron: callApi function and refresh tokens
+Andrew: testing and streamlining the UI
+Berkley: authentication
+
+Jamison: user's top track and artist apis
+River: Report page tab conectivity
