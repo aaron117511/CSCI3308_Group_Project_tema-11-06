@@ -10,3 +10,15 @@ test case plans for future features, as per Lab 11.
 
 In addition, anyone who finished their responsibilities could pick up tasks if they had time to implement small front-end functionality to the app, such as
 making the password bar in the login/registration fields hidden, or making the navbar buttons functional.
+
+
+# Team Meeting 4/19
+During this meeting we, merged branches to main and updated eachother on progress made, came up with a plan to implement API calls to devide up work, continue working on formating for displaying information and begin working on stylization of our page and streamlinging the UI.
+
+Issues being worked on by each team member:
+
+Aaron: callApi function and refresh tokens
+Andrew: testing and streamlining the UI
+Berkley: authentication
+Jamison: user's top track and artist apis
+River: Report page
