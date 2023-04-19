@@ -215,6 +215,11 @@ app.get('/authentication', async (req, res) => {
   }
 });
 
+
+
+
+// To check status use this.status
+        // to access data use datd.<element id>
 function reqListener() {
   console.log(this.responseText);
 }
@@ -229,8 +234,7 @@ function callApi(endpoint, callType, body){
   req.send(body);
 }
 
-        // To check status use this.status
-        // to access data use datd.<element id>
+        
 
 
 
