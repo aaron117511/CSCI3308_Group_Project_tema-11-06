@@ -173,6 +173,11 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/login.ejs');
+  console.log("Logged out successfully");
+})
 
 app.get('/authentication', async (req, res) => {
   var code = req.query.code || null;
