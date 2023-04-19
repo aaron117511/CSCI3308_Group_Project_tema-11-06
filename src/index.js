@@ -2,6 +2,7 @@
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
 const redirect_uri = 'http://localhost:3000/authentication';
+const apiUrl = "https://api.spotify.com/v1/me"
 const express = require('express'); // To build an application server or API
 const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -213,6 +214,18 @@ app.get('/authentication', async (req, res) => {
       });
   }
 });
+
+function reqListener() {
+  console.log(this.responseText);
+}
+function callApi(endpoint, callType, body){
+  const req = new XMLHttpRequest();
+  req.addEventListener(callType, reqListener);
+  req.open(callType, endpoint);
+  req.send(body);
+
+}
+
 
 // **********************************
 // -----START SERVER-----
