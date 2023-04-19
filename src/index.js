@@ -82,14 +82,15 @@ app.get('/extras', (req, res) => {
   }
 });
 
-app.get('/yourReport', (req,res) => {
+//for yourReport page
+app.get('/yourReport', (req, res) => {
   if (req.session.user) {
     res.render('pages/yourReport.ejs');
   }
   else {
     res.redirect('/login');
   }
-})
+});
     
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
