@@ -227,27 +227,37 @@ app.get('/authentication', async (req, res) => {
   }
 });
 
-app.get('/tokenRfresh', async (req, res) =>{
-  var refresh_token = req.query.refresh_token;
-  await axios({
-    url: `https://accounts.spotify.com/api/token`,
-    method: 'post',
-    data: {
-      grant_type: 'refresh_token',
-      refresh_token: req.session.refresh_token      
-    },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    auth: {
-      username: process.env.CLIENT_ID,
-      password: process.env.CLIENT_SECRET
-    }
-  })
-  .then(response => {
-    db.any(update_query, [response.data.access_token,])
-  })
-});
+
+function RefreshToken(){
+  const req = new XMLHttpRequest();
+
+  req.open("POST", "https://accounts.spotify.com/api/token", true);
+  req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  req.setRequestHeader('Authorization', 'Basic ' + btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET));
+  
+  req.send("grant_type=refresh_token" + "&refresh_token=" + req.session.refresh_token + "&client_id=" + process.env.CLIENT_ID);
+}
+// app.get('/tokenRfresh', async (req, res) =>{
+//   var refresh_token = req.query.refresh_token;
+//   await axios({
+//     url: `https://accounts.spotify.com/api/token`,
+//     method: 'post',
+//     data: {
+//       grant_type: 'refresh_token',
+//       refresh_token: req.session.refresh_token      
+//     },
+//     headers: {
+//       'Content-Type': 'application/x-www-form-urlencoded'
+//     },
+//     auth: {
+//       username: process.env.CLIENT_ID,
+//       password: process.env.CLIENT_SECRET
+//     }
+//   })
+//   .then(response => {
+//     db.any(update_query, [response.data.access_token,])
+//   })
+// });
 
 
 // To check status use this.status
@@ -261,16 +271,15 @@ function callApi(endpoint, callType, body){
     console.log(req.responseXML);
   }
   req.addEventListener("GET", reqListener);
-  req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
+  req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.access_token);
   req.open(callType, endpoint);
   req.send(body);
-}
 
-{
-  callApi("https://api.spotify.com/v1/me","GET",NULL)
-  data.image.url
+  if (this.status == 401) {
+    RefreshToken();
+    callApi(endpoint, callType, body);``
+  }
 }
-
 
 
 
