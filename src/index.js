@@ -242,7 +242,10 @@ function callApi(endpoint, callType, body){
   req.send(body);
 }
 
-        
+{
+  callApi("https://api.spotify.com/v1/me","GET",NULL)
+  data.image.url
+}
 
 
 
