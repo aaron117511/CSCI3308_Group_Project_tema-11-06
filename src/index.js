@@ -69,7 +69,12 @@ app.use(
 
 //for the home page
 app.get('/home', (req, res) => {
-  res.render('pages/home.ejs');
+  if (req.session.user) {
+    res.render('pages/home.ejs');
+  }
+  else {
+    res.redirect('/login');
+  }
 });
 
 //for the extras page
@@ -81,17 +86,8 @@ app.get('/extras', (req, res) => {
     res.redirect('/login');
   }
 });
-
-//for yourReport page
-app.get('/yourReport', (req, res) => {
-  if (req.session.user) {
-    res.render('pages/yourReport.ejs');
-  }
-  else {
-    res.redirect('/login');
-  }
-});
     
+
 app.get('/', (req, res) => {
     res.render('pages/home.ejs');
   });
@@ -102,6 +98,10 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
   res.render('pages/register', {});
+});
+
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
 });
 
 app.get('/home_img', (req, res) => {
@@ -174,11 +174,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.render('pages/login.ejs');
-  console.log("Logged out successfully");
-})
 
 app.get('/authentication', async (req, res) => {
   var code = req.query.code || null;
