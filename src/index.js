@@ -268,6 +268,7 @@ function requestData(endpoint, callType, body) {
 //    body is the extra parameters that spotify asks you to include
 //            note: this doesnt have to be used and can be passed entirley in the enpoint varible 
 //                  this is more of here for ease of use and flexability while you imlementing api calls to spotify
+//            note: if you dont use this at all please pass through null instead
 function callApi(endpoint, callType, body){
   requestData(endpoint, callType, body);
   if(this.status == 200){
@@ -275,7 +276,7 @@ function callApi(endpoint, callType, body){
   }
   if (this.status == 401) {
     RefreshToken();
-    requestData(endpoint, callType, body);``
+    requestData(endpoint, callType, body);
   }
 }
 
