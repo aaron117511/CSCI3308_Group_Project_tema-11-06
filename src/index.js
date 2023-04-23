@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+
 // **********************************
 // -----CONNECT TO DATABASE (DB)-----
 // **********************************
@@ -227,27 +228,7 @@ app.get('/authentication', async (req, res) => {
   }
 });
 
-app.get('/tokenRfresh', async (req, res) =>{
-  var refresh_token = req.query.refresh_token;
-  await axios({
-    url: `https://accounts.spotify.com/api/token`,
-    method: 'post',
-    data: {
-      grant_type: 'refresh_token',
-      refresh_token: req.session.refresh_token      
-    },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    auth: {
-      username: process.env.CLIENT_ID,
-      password: process.env.CLIENT_SECRET
-    }
-  })
-  .then(response => {
-    db.any(update_query, [response.data.access_token,])
-  })
-});
+
 
 
 // To check status use this.status
