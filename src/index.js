@@ -228,7 +228,30 @@ app.get('/authentication', async (req, res) => {
   }
 });
 
+app.get('/getUserTopArtists', (req, res) => {
 
+  axios({
+    // replace url with 'https://api.spotify.com/v1/me/top/artists'; this is just a test api for now
+    url: `https://dog.ceo/api/breeds/image/random`,
+    method: 'GET',
+    dataType: 'json',
+    // headers: {
+    //   'Authorization': 'Basic' + req.session.user.refresh_token,
+    // },
+  })
+    .then(results => {
+      console.log(results.data);
+    })
+    .catch(error => {
+      const status = error.response.status;
+      console.log("/getUserTopArtists error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 403) {console.log('/getUserTopArtists Error: Bad OAuth Request');}
+      else if (data == 429) {console.log('/getUserTopArtists Error: Rate Limit Exceeded');}
+      console.log(error.response.data);
+    });
+});
 
 
 // To check status use this.status
@@ -242,14 +265,10 @@ function callApi(endpoint, callType, body){
     console.log(req.responseXML);
   }
   req.addEventListener("GET", reqListener);
-  req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
+  // req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
   req.open(callType, endpoint);
   req.send(body);
 }
-
-        
-
-
 
 
 // **********************************
