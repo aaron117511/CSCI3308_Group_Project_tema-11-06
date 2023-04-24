@@ -228,63 +228,49 @@ app.get('/authentication', async (req, res) => {
 });
 
 
-function RefreshToken(){
-  const xhr = new XMLHttpRequest();
+// call using a format like this where the text after redirect= is replaced with desired redirect address 
+// res.redirect('/refresh?redirect=/');
+app.get('/refresh', async (req, res) => {
+  var update_query = `UPDATE users SET access_token = $1, refresh_token = $2 WHERE username = $3 RETURNING *;`;
+  const redirect_path = req.query.redirect;
 
-  xhr.open("POST", "https://accounts.spotify.com/api/token", true);              // create api call
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');     // add a header to the api call
-  xhr.setRequestHeader('Authorization', 'Basic ' + btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET));   
-  xhr.send("grant_type=refresh_token" + "&refresh_token=" + session.refresh_token + "&client_id=" + process.env.CLIENT_ID); // send the api call
-    // once we get the request back from spotify update the access_token
-  xhr.onload = () =>{
-          var data = JSON.parse(this.responseText);
-          /* i think the following should update the data base but im unsure
-          var update_query = `UPDATE users SET access_token = $1 WHERE username = $3 RETURNING *;`;          
-          db.any(update_query, [
-                                data.access_token,
-                                session.user.username
-                              ]);
-          */
-        };
-}
-
-
-function requestData(endpoint, callType, body) {
-  const xhr = new XMLHttpRequest();
-  xhr.open(callType, endpoint);
-  xhr.setRequestHeader('Authorization', 'Bearer ' + session.user.access_token);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.responseType = 'json'
-  xhr.onload = callApi(endpoint, callType, body) 
-  if(body) xhr.send(JSON.stringify(body));
-  else xhr.send();
-}
-
-
-// call this function when you want to make an api call
-//    endpoint is the url given to you by spotify
-//    callType is the type of api call you're making as a string ie: <"POST">
-//            note: must be in all capps!
-//    body is the extra parameters that spotify asks you to include
-//            note: this doesnt have to be used and can be passed entirley in the enpoint varible 
-//                  this is more of here for ease of use and flexability while you imlementing api calls to spotify
-//            note: if you dont use this at all please pass through null instead
-function callApi(endpoint, callType, body){
-  requestData(endpoint, callType, body);
-  if(this.status == 200){
-  return xhr.responseXML;
-  }
-  if (this.status == 401) {
-    RefreshToken();
-    requestData(endpoint, callType, body);
-  }
-}
-
-
-
-// **********************************
-// -----START SERVER-----
-// **********************************
+  await axios({
+      url: `https://accounts.spotify.com/api/token`,
+      method: 'post',
+      data: {
+        refresh_token: req.session.user.refresh_token,
+        grant_type: 'refresh_token'
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      auth: {
+        username: process.env.CLIENT_ID,
+        password: process.env.CLIENT_SECRET
+      }
+    })
+    .then(response => {
+      var set_refresh_token = response.data.refresh_token || req.session.user.refresh_token;
+        db.any(update_query, [
+          response.data.access_token,
+          set_refresh_token,
+          req.session.user.username
+        ])
+        .then(updated => {
+          req.session.user = updated[0];
+          req.session.save();
+          res.redirect(redirect_path);
+        })
+        .catch(err => {
+          console.log(err);
+          res.redirect(redirect_path);
+        });
+    })
+    .catch(error => {
+      console.log(error);
+      res.redirect(redirect_path);
+    });
+});
 
 
 // **********************************
@@ -301,15 +287,9 @@ function requestAuthorization(){
   return url;
 } //
 
-function getTokenCode(){
-  var usercode = null;
-  const url = window.location.search;
-  if (url.length > 0){
-      const parse_parameters = new URLSearchParams(window.location.search);
-      usercode = parse_parameters.get('code')
-  }
-}
-
+// **********************************
+// -----START SERVER-----
+// **********************************
 // starting the server and keeping the connection open to listen for more requests
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
