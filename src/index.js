@@ -253,6 +253,34 @@ app.get('/getUserTopArtists', (req, res) => {
     });
 });
 
+app.get('/getUserTopTracks', (req, res) => {
+
+  axios({
+    // replace url with 'https://api.spotify.com/v1/me/top/tracks'; this is just a test api for now
+    url: `https://api.spotify.com/v1/me/top/tracks`,
+    method: 'GET',
+    dataType: 'json',
+    // headers: {
+    //   'Authorization': 'Basic' + req.session.user.refresh_token,
+    // },
+  })
+    .then(results => {
+      console.log(results.data);
+      res.render('pages/home.ejs');
+    })
+    .catch(error => {
+      const status = error.response.status;
+      console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
+      else if (data == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
+      console.log(error.response.data);
+
+      res.render('pages/home.ejs');
+    });
+});
+
 
 // To check status use this.status
         // to access data use datd.<element id>
