@@ -238,13 +238,13 @@ function RefreshToken(){
     // once we get the request back from spotify update the access_token
   xhr.onload = () =>{
           var data = JSON.parse(this.responseText);
-          /* i think the following should update the data base but im unsure
+          /* i think the following should update the data base but im unsure*/
           var update_query = `UPDATE users SET access_token = $1 WHERE username = $3 RETURNING *;`;          
           db.any(update_query, [
                                 data.access_token,
                                 session.user.username
                               ]);
-          */
+          
         };
 }
 
