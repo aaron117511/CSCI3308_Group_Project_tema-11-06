@@ -1,0 +1,9 @@
+WEEK 4 PLAN
+1. Test authorization token refresh
+2. Complete code for API calls
+  - getTopSongs
+  - getTopArtists
+  - create_playlist
+3. Create temporary tables to store artist and song information.
+4. Complete HTML view for Extras
+5. Write final tests
