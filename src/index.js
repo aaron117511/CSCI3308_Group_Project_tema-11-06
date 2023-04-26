@@ -4,6 +4,7 @@
 const redirect_uri = 'http://localhost:3000/authentication';
 const apiUrl = "https://api.spotify.com/v1/me"
 const express = require('express'); // To build an application server or API
+var XMLHttpRequest = require('xhr2');
 const app = express();
 const path = require('path');
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
@@ -160,6 +161,8 @@ app.post('/login', async (req, res) => {
       req.session.user = user;
       req.session.save();
       console.log('CONSOLE.LOG FROM INDEX.JS --- User logged in successfully');
+      RefreshToken();
+      console.log (callApi("https://api.spotify.com/v1/me", "GET", null));
       res.status(200).redirect('/');
     }
     else {
@@ -171,6 +174,7 @@ app.post('/login', async (req, res) => {
     console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
     res.status(404).render('pages/login');
   }
+  
 });
 
 app.get('/logout', (req, res) => {
@@ -233,28 +237,42 @@ function RefreshToken(){
 
   xhr.open("POST", "https://accounts.spotify.com/api/token", true);              // create api call
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');     // add a header to the api call
-  xhr.setRequestHeader('Authorization', 'Basic ' + btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET));   
-  xhr.send("grant_type=refresh_token" + "&refresh_token=" + session.refresh_token + "&client_id=" + process.env.CLIENT_ID); // send the api call
+  xhr.setRequestHeader('Authorization', 'Basic ' + btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET));    
+  xhr.responseType = 'json'; 
+  xhr.send("grant_type=refresh_token" + "&refresh_token=" + session.user.refresh_token + "&client_id=" + process.env.CLIENT_ID); // send the api call
     // once we get the request back from spotify update the access_token
   xhr.onload = () =>{
-          var data = JSON.parse(this.responseText);
-          /* i think the following should update the data base but im unsure
-          var update_query = `UPDATE users SET access_token = $1 WHERE username = $3 RETURNING *;`;          
+    if ( this.status == 200 ){
+      var data = JSON.parse(this.responseText);
+      if ( data.access_token != undefined ){        
+        var update_query = `UPDATE users SET access_token = $1 WHERE username = $3 RETURNING *;`;          
           db.any(update_query, [
                                 data.access_token,
-                                session.user.username
+                                process.session.user.username
                               ]);
-          */
-        };
+        console.log(data);
+      }
+      else{
+        var update_query = `UPDATE users SET access_token = $1 WHERE username = $3 RETURNING *;`;          
+          db.any(update_query, [
+                                "updated",
+                                process.session.user.username
+                              ]);
+        console.log(data);
+
+      }
+      console.log('were at the end') ; 
+    }
+  };
 }
 
 
 function requestData(endpoint, callType, body) {
   const xhr = new XMLHttpRequest();
   xhr.open(callType, endpoint);
-  xhr.setRequestHeader('Authorization', 'Bearer ' + session.user.access_token);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + process.session.user.access_token);
   xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.responseType = 'json'
+  xhr.responseType = 'json';
   xhr.onload = callApi(endpoint, callType, body) 
   if(body) xhr.send(JSON.stringify(body));
   else xhr.send();
