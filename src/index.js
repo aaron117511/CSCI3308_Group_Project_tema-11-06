@@ -281,8 +281,13 @@ app.get('/getUserTopArtists', (req, res) => {
   }
 
   else {
+    let timeRange = '';
+    if (req.query.time_range) {
+      timeRange = '?time_range=' + req.query.time_range;
+    }
+
     axios({
-      url: `https://api.spotify.com/v1/me/top/artists`,
+      url: `https://api.spotify.com/v1/me/top/artists` + timeRange,
       method: 'GET',
       dataType: 'json',
       headers: {
@@ -325,8 +330,12 @@ app.get('/getUserTopTracks', (req, res) => {
   }
 
   else {
+    let timeRange = '';
+    if (req.query.time_range) {
+      timeRange = '?time_range=' + req.query.time_range;
+    }
     axios({
-      url: `https://api.spotify.com/v1/me/top/tracks`,
+      url: `https://api.spotify.com/v1/me/top/tracks` + timeRange,
       method: 'GET',
       dataType: 'json',
       headers: {
