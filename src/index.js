@@ -228,60 +228,136 @@ app.get('/authentication', async (req, res) => {
   }
 });
 
-app.get('/getUserTopTracks', (req, res) => {
+// call using a format like this where the text after redirect= is replaced with desired redirect address 
+// res.redirect('/refresh?redirect=/');
+app.get('/refresh', async (req, res) => {
+  var update_query = `UPDATE users SET access_token = $1, refresh_token = $2 WHERE username = $3 RETURNING *;`;
+  const redirect_path = req.query.redirect;
 
-  axios({
-    // replace url with 'https://api.spotify.com/v1/me/top/artists'; this is just a test api for now
-    url: `https://dog.ceo/api/breeds/image/random`,
-    method: 'GET',
-    dataType: 'json',
-    // headers: {
-    //   'Authorization': 'Basic' + req.session.user.refresh_token,
-    // },
-  })
+  await axios({
+      url: `https://accounts.spotify.com/api/token`,
+      method: 'post',
+      data: {
+        refresh_token: req.session.user.refresh_token,
+        grant_type: 'refresh_token'
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      auth: {
+        username: process.env.CLIENT_ID,
+        password: process.env.CLIENT_SECRET
+      }
+    })
+    .then(response => {
+      var set_refresh_token = response.data.refresh_token || req.session.user.refresh_token;
+        db.any(update_query, [
+          response.data.access_token,
+          set_refresh_token,
+          req.session.user.username
+        ])
+        .then(updated => {
+          req.session.user = updated[0];
+          req.session.save();
+          res.redirect(redirect_path);
+        })
+        .catch(err => {
+          console.log(err);
+          res.redirect(redirect_path);
+        });
+    })
+    .catch(error => {
+      console.log(error);
+      res.redirect(redirect_path);
+    });
+});
+
+app.get('/getUserTopArtists', (req, res) => {
+
+  // Checks if user is logged in
+  if (!req.session.user) {
+    console.log('No session variable detected. Redirecting to Login.');
+    res.redirect('/login');
+  }
+
+  else {
+    axios({
+      url: `https://api.spotify.com/v1/me/top/artists`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Authorization': 'Bearer  ' + req.session.user.access_token,
+      },
+    })
     .then(results => {
       console.log(results.data);
-      res.render('pages/home.ejs');
+      res.redirect('/yourReport');
     })
     .catch(error => {
       const status = error.response.status;
-      console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
-      console.log(error.response.data);
 
-      if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
-      else if (data == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
-      console.log(error.response.data);
+      // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+      if (status == 401) {
+        console.log("/getUserTopArtists: Status 401 received. Refreshing token and calling this route again...")
+        res.redirect('/refresh?redirect=/getUserTopArtists');
+      }
 
-      res.render('pages/home.ejs');
+      else {
+        console.log("/getUserTopArtists error: There was an error in retrieving API data. See detailed error below:");
+        console.log(error.response.data);
+
+        if (status == 400) {console.log('getUserTopArtists Error: Status 400 received');}
+        if (status == 403) {console.log('/getUserTopArtists Error: Bad OAuth Request');}
+        else if (status == 429) {console.log('/getUserTopArtists Error: Rate Limit Exceeded');}
+
+        res.redirect('/yourReport');
+      }
     });
+  }
 });
 
 app.get('/getUserTopTracks', (req, res) => {
 
-  axios({
-    // replace url with 'https://api.spotify.com/v1/me/top/tracks'; this is just a test api for now
-    url: `https://api.spotify.com/v1/me/top/tracks`,
-    method: 'GET',
-    dataType: 'json',
-    // headers: {
-    //   'Authorization': 'Basic' + req.session.user.refresh_token,
-    // },
-  })
+  // Checks if user is logged in
+  if (!req.session.user) {
+    console.log('No session variable detected. Redirecting to Login.');
+    res.redirect('/login');
+  }
+
+  else {
+    axios({
+      url: `https://api.spotify.com/v1/me/top/tracks`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Authorization': 'Bearer  ' + req.session.user.access_token,
+      },
+    })
     .then(results => {
       console.log(results.data);
-      res.render('pages/home.ejs');
+      res.redirect('/yourReport');
     })
     .catch(error => {
       const status = error.response.status;
-      console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
-      console.log(error.response.data);
 
-      if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
-      else if (data == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
-      console.log(error.response.data);
+      // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+      if (status == 401) {
+        console.log("/getUserTopTracks: Status 401 received. Refreshing token and calling this route again...")
+        res.redirect('/refresh?redirect=/getUserTopTracks');
+      }
 
-      res.render('pages/home.ejs');
+      else {
+        console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
+        console.log(error.response.data);
+
+        if (status == 400) {console.log('getUserTopTracks Error: Status 400 received');}
+        if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
+        else if (status == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
+
+        res.redirect('/yourReport');
+      }
     });
+  }
 });
 
 
