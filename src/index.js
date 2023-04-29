@@ -95,9 +95,9 @@ app.get('/yourReport', async (req, res) => {
     });
   }
   else {
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token);
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
     const top_tracks = top_tracks_response.data;
-    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token);
+    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
     const top_artists = top_artists_response.data;
     res.render('pages/yourReport.ejs', {
       spotify_user: user_info,
@@ -288,7 +288,10 @@ app.get('/refresh', async (req, res) => {
 });
 
 app.get('/getUserTopArtists', (req, res) => {
-
+  let timeRange = '';
+  if (req.query.time_range) {
+    timeRange = '?time_range=' + req.query.time_range;
+  }
   // Checks if user is logged in
   // if (!req.session.user) {
   //   console.log('No session variable detected. Redirecting to Login.');
@@ -296,7 +299,7 @@ app.get('/getUserTopArtists', (req, res) => {
   // }
 
   axios({
-    url: `https://api.spotify.com/v1/me/top/artists`,
+    url: `https://api.spotify.com/v1/me/top/artists` + timeRange,
     method: 'GET',
     dataType: 'json',
     headers: {
@@ -308,7 +311,6 @@ app.get('/getUserTopArtists', (req, res) => {
   })
   .catch(error => {
     const status = error.response.status;
-
     // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
     if (status == 401) {
       console.log("/getUserTopArtists: Status 401 received. Refreshing token and calling this route again...")
@@ -330,10 +332,13 @@ app.get('/getUserTopArtists', (req, res) => {
 });
 
 app.get('/getUserTopTracks', (req, res) => {
-
+  let timeRange = '';
+  if (req.query.time_range) {
+    timeRange = '?time_range=' + req.query.time_range;
+  }
   // Checks if user is logged in
   axios({
-    url: `https://api.spotify.com/v1/me/top/tracks`,
+    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange,
     method: 'GET',
     dataType: 'json',
     headers: {
