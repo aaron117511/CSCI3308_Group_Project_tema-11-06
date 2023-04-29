@@ -2,6 +2,7 @@
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
 const redirect_uri = 'http://localhost:3000/authentication';
+const url_concat = 'http://localhost:3000';
 const apiUrl = "https://api.spotify.com/v1/me"
 const express = require('express'); // To build an application server or API
 const app = express();
@@ -83,12 +84,26 @@ app.get('/extras', (req, res) => {
 });
 
 //for yourReport page
-app.get('/yourReport', (req, res) => {
-  if (req.session.user) {
-    res.render('pages/yourReport.ejs');
+app.get('/yourReport', async (req, res) => {
+  const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
+  const user_info = user_response.data;
+  if (req.query.timeline == null) {
+    res.render('pages/yourReport.ejs', {
+      spotify_user: user_info,
+      top_tracks: null,
+      top_artists: null
+    });
   }
   else {
-    res.redirect('/login');
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token);
+    const top_tracks = top_tracks_response.data;
+    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token);
+    const top_artists = top_artists_response.data;
+    res.render('pages/yourReport.ejs', {
+      spotify_user: user_info,
+      top_tracks: top_tracks,
+      top_artists: top_artists
+    });
   }
 });
     
@@ -275,89 +290,121 @@ app.get('/refresh', async (req, res) => {
 app.get('/getUserTopArtists', (req, res) => {
 
   // Checks if user is logged in
-  if (!req.session.user) {
-    console.log('No session variable detected. Redirecting to Login.');
-    res.redirect('/login');
-  }
+  // if (!req.session.user) {
+  //   console.log('No session variable detected. Redirecting to Login.');
+  //   res.redirect('/login');
+  // }
 
-  else {
-    axios({
-      url: `https://api.spotify.com/v1/me/top/artists`,
-      method: 'GET',
-      dataType: 'json',
-      headers: {
-        'Authorization': 'Bearer  ' + req.session.user.access_token,
-      },
-    })
-    .then(results => {
-      console.log(results.data);
-      res.redirect('/yourReport');
-    })
-    .catch(error => {
-      const status = error.response.status;
+  axios({
+    url: `https://api.spotify.com/v1/me/top/artists`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.query.key
+    },
+  })
+  .then(results => {
+    res.send(results.data);
+  })
+  .catch(error => {
+    const status = error.response.status;
 
-      // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
-      if (status == 401) {
-        console.log("/getUserTopArtists: Status 401 received. Refreshing token and calling this route again...")
-        res.redirect('/refresh?redirect=/getUserTopArtists');
-      }
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/getUserTopArtists: Status 401 received. Refreshing token and calling this route again...")
+      res.status(status).send('Token refresh required');
+    }
 
-      else {
-        console.log("/getUserTopArtists error: There was an error in retrieving API data. See detailed error below:");
-        console.log(error.response.data);
+    else {
+      console.log("/getUserTopArtists error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
 
-        if (status == 400) {console.log('getUserTopArtists Error: Status 400 received');}
-        if (status == 403) {console.log('/getUserTopArtists Error: Bad OAuth Request');}
-        else if (status == 429) {console.log('/getUserTopArtists Error: Rate Limit Exceeded');}
+      if (status == 400) {console.log('getUserTopArtists Error: Status 400 received');}
+      if (status == 403) {console.log('/getUserTopArtists Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/getUserTopArtists Error: Rate Limit Exceeded');}
 
-        res.redirect('/yourReport');
-      }
-    });
-  }
+      res.status(status).send('Error');
+    }
+  });
+  
 });
 
 app.get('/getUserTopTracks', (req, res) => {
 
   // Checks if user is logged in
-  if (!req.session.user) {
-    console.log('No session variable detected. Redirecting to Login.');
-    res.redirect('/login');
-  }
+  axios({
+    url: `https://api.spotify.com/v1/me/top/tracks`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.query.key,
+    },
+  })
+  .then(results => {
+    res.send(results.data);
+  })
+  .catch(error => {
+    const status = error.response.status;
 
-  else {
-    axios({
-      url: `https://api.spotify.com/v1/me/top/tracks`,
-      method: 'GET',
-      dataType: 'json',
-      headers: {
-        'Authorization': 'Bearer  ' + req.session.user.access_token,
-      },
-    })
-    .then(results => {
-      console.log(results.data);
-      res.redirect('/yourReport');
-    })
-    .catch(error => {
-      const status = error.response.status;
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/getUserTopTracks: Status 401 received. Refreshing token and calling this route again...")
+      res.status(status).send('Token refresh required');
+    }
 
-      // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
-      if (status == 401) {
-        console.log("/getUserTopTracks: Status 401 received. Refreshing token and calling this route again...")
-        res.redirect('/refresh?redirect=/getUserTopTracks');
-      }
+    else {
+      console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
 
-      else {
-        console.log("/getUserTopTracks error: There was an error in retrieving API data. See detailed error below:");
-        console.log(error.response.data);
+      if (status == 400) {console.log('getUserTopTracks Error: Status 400 received');}
+      if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
 
-        if (status == 400) {console.log('getUserTopTracks Error: Status 400 received');}
-        if (status == 403) {console.log('/getUserTopTracks Error: Bad OAuth Request');}
-        else if (status == 429) {console.log('/getUserTopTracks Error: Rate Limit Exceeded');}
+      res.status(status).send('Error');
+    }
+  });
 
-        res.redirect('/yourReport');
-      }
-    });
-  }
+});
+
+app.get('/getUserInfo', (req, res) => {
+  // Checks if user is logged in
+  // if (!req.session.user) {
+  //   console.log('No session variable detected. Redirecting to Login.');
+  //   res.redirect('/login');
+  // }
+  // else {
+  axios({
+    url: `https://api.spotify.com/v1/me`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.query.key,
+    },
+  })
+  .then(results => {
+    res.send(results.data);
+  })
+  .catch(error => {
+    const status = error.response.status;
+
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/getUserInfo: Status 401 received. Refreshing token...")
+      res.status(status).send('Token refresh required');
+    }
+
+    else {
+      console.log("/getUserInfo error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 400) {console.log('/getUserInfo Error: Status 400 received');}
+      if (status == 403) {console.log('/getUserInfo Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/getUserInfo Error: Rate Limit Exceeded');}
+      res.status(status).send('Error');
+
+    }
+  });
+  // }
 });
 
 
