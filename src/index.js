@@ -418,6 +418,40 @@ app.get('/getUserInfo', (req, res) => {
   // }
 });
 
+app.get('/getNewReleases', (req, res) => {
+  axios({
+    url: `https://api.spotify.com/v1/browse/new-releases`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.query.key,
+    },
+  })
+  .then(results => {
+    res.send(results.data);
+  })
+  .catch(error => {
+    const status = error.response.status;
+
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/getUserInfo: Status 401 received. Refreshing token...")
+      res.status(status).send('Token refresh required');
+    }
+
+    else {
+      console.log("/getUserInfo error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 400) {console.log('/getUserInfo Error: Status 400 received');}
+      if (status == 403) {console.log('/getUserInfo Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/getUserInfo Error: Rate Limit Exceeded');}
+      res.status(status).send('Error');
+
+    }
+  });
+});
+
 
 // To check status use this.status
         // to access data use datd.<element id>
