@@ -1,9 +1,7 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-const redirect_uri = 'http://localhost:3000/authentication';
 const url_concat = 'http://localhost:3000';
-const apiUrl = "https://api.spotify.com/v1/me"
 const express = require('express'); // To build an application server or API
 const app = express();
 const path = require('path');
@@ -12,6 +10,14 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+
+const test_json = {
+  name: "test playlist",
+  track_uris: ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", 
+  "spotify:track:1301WleyT98MSxVHPZCA6M", 
+  "spotify:episode:512ojhOuo1ktJprKbVcKyQ"
+  ]
+}
 
 // **********************************
 // -----CONNECT TO DATABASE (DB)-----
@@ -153,6 +159,10 @@ app.post('/login', async (req, res) => {
 
 // Authentication middleware.
 const auth = (req, res, next) => {
+  if (req.path === '/getUserInfo' || req.path === '/getUserTopArtists' || req.path === '/getUserTopTracks' || req.path === '/createPlaylist' || req.path === '/addTracks') {
+    return next();
+  }
+
   if (!req.session.user) {
     return res.redirect("/login");
   }
@@ -164,7 +174,10 @@ app.use(auth);
 //for the extras page
 app.get('/extras', (req, res) => {
   if (req.session.user) {
-    res.render('pages/extras.ejs');
+    res.render('pages/extras.ejs', {
+      name: 'test playlist',
+      track_uris: '["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]'
+    });
   }
   else {
     res.redirect('/login');
@@ -174,24 +187,32 @@ app.get('/extras', (req, res) => {
 //for yourReport page
 app.get('/yourReport', async (req, res) => {
   const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
-  const user_info = user_response.data;
-  if (req.query.timeline == null) {
-    res.render('pages/yourReport.ejs', {
-      spotify_user: user_info,
-      top_tracks: null,
-      top_artists: null
-    });
+  if (user_response.status == 401) {
+    res.redirect('/refresh?redirect=/yourReport');
   }
   else {
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-    const top_tracks = top_tracks_response.data;
-    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-    const top_artists = top_artists_response.data;
-    res.render('pages/yourReport.ejs', {
-      spotify_user: user_info,
-      top_tracks: top_tracks,
-      top_artists: top_artists
-    });
+    const user_info = user_response.data;
+    req.session.spotify_user = user_info;
+    req.session.save();
+
+    if (req.query.timeline == null) {
+      res.render('pages/yourReport.ejs', {
+        spotify_user: user_info,
+        top_tracks: null,
+        top_artists: null
+      });
+    }
+    else {
+      const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
+      const top_tracks = top_tracks_response.data;
+      const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
+      const top_artists = top_artists_response.data;
+      res.render('pages/yourReport.ejs', {
+        spotify_user: user_info,
+        top_tracks: top_tracks,
+        top_artists: top_artists
+      });
+    }
   }
 });
 
@@ -212,10 +233,10 @@ app.get('/authentication', async (req, res) => {
   else {
     await axios({
         url: `https://accounts.spotify.com/api/token`,
-        method: 'post',
+        method: 'POST',
         data: {
           code: code,
-          redirect_uri: redirect_uri,
+          redirect_uri: url_concat + '/authentication',
           grant_type: 'authorization_code'
         },
         headers: {
@@ -257,7 +278,7 @@ app.get('/refresh', async (req, res) => {
 
   await axios({
       url: `https://accounts.spotify.com/api/token`,
-      method: 'post',
+      method: 'POST',
       data: {
         refresh_token: req.session.user.refresh_token,
         grant_type: 'refresh_token'
@@ -298,11 +319,6 @@ app.get('/getUserTopArtists', (req, res) => {
   if (req.query.time_range) {
     timeRange = '?time_range=' + req.query.time_range;
   }
-  // Checks if user is logged in
-  // if (!req.session.user) {
-  //   console.log('No session variable detected. Redirecting to Login.');
-  //   res.redirect('/login');
-  // }
 
   axios({
     url: `https://api.spotify.com/v1/me/top/artists` + timeRange,
@@ -342,7 +358,6 @@ app.get('/getUserTopTracks', (req, res) => {
   if (req.query.time_range) {
     timeRange = '?time_range=' + req.query.time_range;
   }
-  // Checks if user is logged in
   axios({
     url: `https://api.spotify.com/v1/me/top/tracks` + timeRange,
     method: 'GET',
@@ -378,12 +393,6 @@ app.get('/getUserTopTracks', (req, res) => {
 });
 
 app.get('/getUserInfo', (req, res) => {
-  // Checks if user is logged in
-  // if (!req.session.user) {
-  //   console.log('No session variable detected. Redirecting to Login.');
-  //   res.redirect('/login');
-  // }
-  // else {
   axios({
     url: `https://api.spotify.com/v1/me`,
     method: 'GET',
@@ -415,30 +424,115 @@ app.get('/getUserInfo', (req, res) => {
 
     }
   });
-  // }
 });
 
+app.post('/playlist', async (req, res) => {
+  const track_uri_array = JSON.parse(req.body.track_uris);
 
-// To check status use this.status
-        // to access data use datd.<element id>
-function reqListener() {
-  console.log(this.responseText);
-}
-function callApi(endpoint, callType, body){
-  const req = new XMLHttpRequest();
-  req.onload = () => {
-    console.log(req.responseXML);
-  }
-  req.addEventListener("GET", reqListener);
-  // req.setRequestHeader('Authorization', 'Bearer ' + req.session.user.refresh_token);
-  req.open(callType, endpoint);
-  req.send(body);
-}
+  const create_playlist_response = await axios.post(url_concat + '/createPlaylist', {
+    spotify_user_id: req.session.spotify_user.id,
+    key: req.session.user.access_token,
+    name: req.body.name
+  });
+
+  const create_playlist = create_playlist_response.data;
+
+  const add_tracks_response = await axios.post(url_concat + '/addTracks', {
+    playlist_id: create_playlist.id,
+    key: req.session.user.access_token,
+    track_uris: track_uri_array
+  });
+
+  res.send(create_playlist);
+
+})
+
+app.post('/createPlaylist', (req, res) => {
+  axios({
+    url: `https://api.spotify.com/v1/users/` + req.body.spotify_user_id + '/playlists',
+    method: 'POST',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.body.key,
+      'Content-Type': 'application/json'
+    },
+    data : {
+      name: req.body.name
+    }
+  })
+  .then(results => {
+    res.send(results.data);
+  })
+
+  .catch(error => {
+    const status = error.response.status;
+
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/createPlaylist: Status 401 received. Refreshing token...")
+      res.status(status).send('Token refresh required');
+    }
+
+    else {
+      console.log("/createPlaylist error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 400) {console.log('/createPlaylist Error: Status 400 received');}
+      if (status == 403) {console.log('/createPlaylist Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/createPlaylist Error: Rate Limit Exceeded');}
+      res.status(status).send('Error');
+
+    }
+  });
+});
+
+app.post('/addTracks', (req, res) => {
+  axios({
+    url: `https://api.spotify.com/v1/playlists/` + req.body.playlist_id + '/tracks',
+    method: 'POST',
+    dataType: 'json',
+    headers: {
+      'Authorization': 'Bearer  ' + req.body.key,
+      'Content-Type': 'application/json'
+    },
+    data: {
+      uris: req.body.track_uris
+    }
+  })
+  .then(results => {
+    res.status(200);
+  })
+
+  .catch(error => {
+    const status = error.response.status;
+
+    // If token is expired, call /refresh route to refresh the token, and then have this route call itself again.
+    if (status == 401) {
+      console.log("/addTracks: Status 401 received. Refreshing token...")
+      res.status(status).send('Token refresh required');
+    }
+
+    else {
+      console.log("/addTracks error: There was an error in retrieving API data. See detailed error below:");
+      console.log(error.response.data);
+
+      if (status == 400) {console.log('/addTracks Error: Status 400 received');}
+      if (status == 403) {console.log('/addTracks Error: Bad OAuth Request');}
+      else if (status == 429) {console.log('/addTracks Error: Rate Limit Exceeded');}
+      res.status(status).send('Error');
+
+    }
+  });
+});
 
 
 // **********************************
 // -----START SERVER-----
 // **********************************
+// starting the server and keeping the connection open to listen for more requests
+module.exports = app.listen(3000);
+console.log('Server is listening on port 3000');
+
 
 
 // **********************************
@@ -448,22 +542,9 @@ function requestAuthorization(){
   let url = 'https://accounts.spotify.com/authorize';
   url +=  "?client_id=" + process.env.CLIENT_ID + 
           "&response_type=code" +
-          "&redirect_uri=" + redirect_uri +
+          "&redirect_uri=" + url_concat + '/authentication' + 
           "&scope=ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private" +            // what premissions we want
           "&show_dialog=false" +
           "&state=aIler30Bwjxby4pp";    // useres only need to authorize once
   return url;
 } //
-
-function getTokenCode(){
-  var usercode = null;
-  const url = window.location.search;
-  if (url.length > 0){
-      const parse_parameters = new URLSearchParams(window.location.search);
-      usercode = parse_parameters.get('code')
-  }
-}
-
-// starting the server and keeping the connection open to listen for more requests
-module.exports = app.listen(3000);
-console.log('Server is listening on port 3000');
