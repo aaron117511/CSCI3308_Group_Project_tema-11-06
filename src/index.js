@@ -162,13 +162,13 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 //for the extras page
-app.get('/extras', (req, res) => {
-  if (req.session.user) {
-    res.render('pages/extras.ejs');
-  }
-  else {
-    res.redirect('/login');
-  }
+app.get('/extras', async (req, res) => {
+
+  const new_releases_response = await axios.get(url_concat + '/getNewReleases?key=' + req.session.user.access_token);
+  const new_releases = new_releases_response.data;
+  res.render('pages/extras.ejs', {
+    new_releases: new_releases
+  });
 });
 
 //for yourReport page
@@ -187,6 +187,7 @@ app.get('/yourReport', async (req, res) => {
     const top_tracks = top_tracks_response.data;
     const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
     const top_artists = top_artists_response.data;
+    console.log(top_artists);
     res.render('pages/yourReport.ejs', {
       spotify_user: user_info,
       top_tracks: top_tracks,
