@@ -11,14 +11,6 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 
-const test_json = {
-  name: "test playlist",
-  track_uris: ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", 
-  "spotify:track:1301WleyT98MSxVHPZCA6M", 
-  "spotify:episode:512ojhOuo1ktJprKbVcKyQ"
-  ]
-}
-
 // **********************************
 // -----CONNECT TO DATABASE (DB)-----
 // **********************************
