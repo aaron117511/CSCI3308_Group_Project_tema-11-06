@@ -10,10 +10,10 @@
         Select Timeline
       </button>
       <div class="dropdown-menu" >
-        <a class="dropdown-item" href="#">Timeline 1</a>
-        <a class="dropdown-item" href="#">Timeline 2</a>
-        <a class="dropdown-item" href="#">Timeline 3</a>
-        <a class="dropdown-item" href="#">Timeline 4</a>
+        <a class="dropdown-item" href="/yourReport?timeline=long_term">year long</a>
+        <a class="dropdown-item" href="/yourReport?timeline=medium_term">last 6 months</a>
+        <a class="dropdown-item" href="/yourReport?timeline=medium_term">1-2 months</a
+
       </div>
     </div>
     <!-- Spotify API call goes here -->
@@ -33,37 +33,11 @@
              
            <div class="container-fluid d-flex justify-content-center">
             <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move">
-               <div class="list-item" data-id="13" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
-                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-primary">P</span></a></div>
-                  <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Song 1</a>
-                     <div class="item-except text-muted text-sm h-1x">Artist</div>
-                  </div>
-                  <div class="no-wrap">
-                     <div class="item-date text-muted text-sm d-none d-md-block"></div>
-                  </div>
-                  <div>
-                     <div class="item-action dropdown">
-                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                              <circle cx="12" cy="12" r="1"></circle>
-                              <circle cx="12" cy="5" r="1"></circle>
-                              <circle cx="12" cy="19" r="1"></circle>
-                           </svg>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                           <div class="dropdown-divider"></div>
-                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
                <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
                   <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
                   <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Steven Hmpire</a>
-                     <div class="item-except text-muted text-sm h-1x">Build a progressive web app using jQuery</div>
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[0].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[0].album.artists[0].name : "not found" %></div>
                   </div>
                   <div class="no-wrap">
                      <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
@@ -85,14 +59,14 @@
                      </div>
                   </div>
                </div>
-               <div class="list-item" data-id="17" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
-                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-warning">A</span></a></div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
                   <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Alan musk</a>
-                     <div class="item-except text-muted text-sm h-1x">it be advisable for me to think about business content?</div>
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[1].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[1].album.artists[0].name : "not found" %></div>
                   </div>
                   <div class="no-wrap">
-                     <div class="item-date text-muted text-sm d-none d-md-block">13/12 18</div>
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
                   </div>
                   <div>
                      <div class="item-action dropdown">
@@ -111,14 +85,14 @@
                      </div>
                   </div>
                </div>
-               <div class="list-item" data-id="8" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-success"><img src="https://img.icons8.com/doodle/24/000000/user-male.png" alt="."></span></a></div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
                   <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Lawrence Telon</a>
-                     <div class="item-except text-muted text-sm h-1x">For what reason would it be advisable for me to think</div>
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[2].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[2].album.artists[0].name : "not found" %></div>
                   </div>
                   <div class="no-wrap">
-                     <div class="item-date text-muted text-sm d-none d-md-block">02/11 18</div>
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
                   </div>
                   <div>
                      <div class="item-action dropdown">
@@ -137,14 +111,14 @@
                      </div>
                   </div>
                </div>
-               <div class="list-item" data-id="10" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false" style="">
-                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-danger"><img src="https://img.icons8.com/color/16/000000/administrator-male.png" alt="."></span></a></div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
                   <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Stuart Clark</a>
-                     <div class="item-except text-muted text-sm h-1x">For what reason would, i think about business content?</div>
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[3].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[3].album.artists[0].name : "not found" %></div>
                   </div>
                   <div class="no-wrap">
-                     <div class="item-date text-muted text-sm d-none d-md-block">1 day ago</div>
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
                   </div>
                   <div>
                      <div class="item-action dropdown">
@@ -163,14 +137,14 @@
                      </div>
                   </div>
                </div>
-               <div class="list-item" data-id="3" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-primary"><img src="https://img.icons8.com/bubbles/16/000000/administrator-male.png" alt="."></span></a></div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
                   <div class="flex">
-                     <a href="#" class="item-author text-color" data-abc="true">Jordan Stephens</a>
-                     <div class="item-except text-muted text-sm h-1x">For what reason would it be advisable for me to think about business</div>
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[4].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[4].album.artists[0].name : "not found" %></div>
                   </div>
                   <div class="no-wrap">
-                     <div class="item-date text-muted text-sm d-none d-md-block">1 hour ago</div>
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
                   </div>
                   <div>
                      <div class="item-action dropdown">
@@ -188,6 +162,137 @@
                         </div>
                      </div>
                   </div>
+               </div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
+                  <div class="flex">
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[5].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[5].album.artists[0].name : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
+                  </div>
+                  <div>
+                     <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="12" cy="5" r="1"></circle>
+                              <circle cx="12" cy="19" r="1"></circle>
+                           </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                           <div class="dropdown-divider"></div>
+                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
+                  <div class="flex">
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[6].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[6].album.artists[0].name : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
+                  </div>
+                  <div>
+                     <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="12" cy="5" r="1"></circle>
+                              <circle cx="12" cy="19" r="1"></circle>
+                           </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                           <div class="dropdown-divider"></div>
+                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
+                  <div class="flex">
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[7].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[7].album.artists[0].name : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
+                  </div>
+                  <div>
+                     <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="12" cy="5" r="1"></circle>
+                              <circle cx="12" cy="19" r="1"></circle>
+                           </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                           <div class="dropdown-divider"></div>
+                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
+                  <div class="flex">
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[8].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[8].album.artists[0].name : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
+                  </div>
+                  <div>
+                     <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="12" cy="5" r="1"></circle>
+                              <circle cx="12" cy="19" r="1"></circle>
+                           </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                           <div class="dropdown-divider"></div>
+                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="https://img.icons8.com/bubbles/24/000000/user.png" alt="."></span></a></div>
+                  <div class="flex">
+                     <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[9].name : "not found" %></a>
+                     <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[9].album.artists[0].name : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                     <div class="item-date text-muted text-sm d-none d-md-block">2 days ago</div>
+                  </div>
+                  <div>
+                     <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="12" cy="5" r="1"></circle>
+                              <circle cx="12" cy="19" r="1"></circle>
+                           </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                           <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                           <div class="dropdown-divider"></div>
+                           <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
                </div>
             </div>
          </div>
