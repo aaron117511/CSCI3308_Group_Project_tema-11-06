@@ -163,36 +163,50 @@ app.use(auth);
 
 //for the extras page
 app.get('/extras', async (req, res) => {
-
   const new_releases_response = await axios.get(url_concat + '/getNewReleases?key=' + req.session.user.access_token);
-  const new_releases = new_releases_response.data;
-  res.render('pages/extras.ejs', {
-    new_releases: new_releases
-  });
+  if (new_releases_response.status == 401) {
+    res.redirect('/refresh?redirect=/extras');
+  }
+  else {
+    const new_releases = new_releases_response.data;
+    req.session.new_releases = new_releases;
+    req.session.save();
+
+    res.render('pages/extras.ejs', {
+      new_releases: new_releases
+    });
+  }
 });
 
 //for yourReport page
 app.get('/yourReport', async (req, res) => {
   const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
-  const user_info = user_response.data;
-  if (req.query.timeline == null) {
-    res.render('pages/yourReport.ejs', {
-      spotify_user: user_info,
-      top_tracks: null,
-      top_artists: null
-    });
+  if (user_response.status == 401) {
+    res.redirect('/refresh?redirect=/yourReport');
   }
   else {
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-    const top_tracks = top_tracks_response.data;
-    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-    const top_artists = top_artists_response.data;
-    console.log(top_artists);
-    res.render('pages/yourReport.ejs', {
-      spotify_user: user_info,
-      top_tracks: top_tracks,
-      top_artists: top_artists
-    });
+    const user_info = user_response.data;
+    req.session.spotify_user = user_info;
+    req.session.save();
+
+    if (req.query.timeline == null) {
+      res.render('pages/yourReport.ejs', {
+        spotify_user: user_info,
+        top_tracks: null,
+        top_artists: null
+      });
+    }
+    else {
+      const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
+      const top_tracks = top_tracks_response.data;
+      const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
+      const top_artists = top_artists_response.data;
+      res.render('pages/yourReport.ejs', {
+        spotify_user: user_info,
+        top_tracks: top_tracks,
+        top_artists: top_artists
+      });
+    }
   }
 });
 
