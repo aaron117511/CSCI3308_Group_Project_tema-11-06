@@ -195,7 +195,6 @@ app.get('/extras', (req, res) => {
 
 //for yourReport page
 app.get('/yourReport', async (req, res) => {
-  console.log(req.query.timeline);
   const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
   if (user_response.status == 401) {
     res.redirect('/refresh?redirect=/yourReport');
@@ -208,11 +207,10 @@ app.get('/yourReport', async (req, res) => {
     if (req.query.timeline) {
       timeline = req.query.timeline;
     }
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline);
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=5');
     const top_tracks = top_tracks_response.data;
-    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '&time_range=' + timeline);
+    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '&time_range=' + timeline+ '&limit=5');
     const top_artists = top_artists_response.data;
-    console.log(top_artists, top_tracks)
     res.render('pages/yourReport.ejs', {
       spotify_user: user_info,
       top_tracks: top_tracks,
@@ -322,13 +320,18 @@ app.get('/refresh', async (req, res) => {
 });
 
 app.get('/getUserTopArtists', (req, res) => {
-  let timeRange = '';
+  var timeRange = '?time_range=medium_term';
+  var limit = '&limit=20';
+
   if (req.query.time_range) {
     timeRange = '?time_range=' + req.query.time_range;
   }
+  if (req.query.limit) {
+    limit = '&limit=' + String(req.query.limit);
+  }
 
   axios({
-    url: `https://api.spotify.com/v1/me/top/artists` + timeRange,
+    url: `https://api.spotify.com/v1/me/top/artists` + timeRange + limit,
     method: 'GET',
     dataType: 'json',
     headers: {
@@ -361,12 +364,17 @@ app.get('/getUserTopArtists', (req, res) => {
 });
 
 app.get('/getUserTopTracks', (req, res) => {
-  let timeRange = '';
+  var timeRange = '?time_range=medium_term';
+  var limit = '&limit=20';
+
   if (req.query.time_range) {
     timeRange = '?time_range=' + req.query.time_range;
   }
+  if (req.query.limit) {
+    limit = '&limit=' + String(req.query.limit);
+  }
   axios({
-    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange,
+    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange + limit,
     method: 'GET',
     dataType: 'json',
     headers: {

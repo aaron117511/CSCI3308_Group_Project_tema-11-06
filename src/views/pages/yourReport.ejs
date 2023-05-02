@@ -30,565 +30,101 @@
   } );
   </script>
 <table id = "infoContainer">
-   <tr width = "100%">
-      <td>
-         <div class="page-content page-container" id="page-content" >
-            <div class="padding">
-               <div class="row">
-                  <h3 class="text-white">Top Tracks</h3>
-                  <div class="col-sm-16">
-                     
-                  <div class="container-fluid d-flex justify-content-center">
-                     <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move" >
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                        <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[0].album.images[0].url : "not found" %>" alt="."></span></a></div>
+  <tr width = "100%">
+  <td>
+    <div class="page-content page-container" id="page-content" >
+      <div class="padding">
+        <div class="row">
+          <h3 class="text-white">Top Tracks</h3>
+          <div class="col-sm-16">
+                    
+          <div class="container-fluid d-flex justify-content-center">
+            <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move" >
 
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[0].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[0].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block">Album: <%=  top_tracks ? top_tracks.items[0].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[1].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[1].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[1].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[1].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[2].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[2].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[2].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[2].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[3].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[3].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[3].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[3].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[4].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[4].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[4].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[4].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[5].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[5].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[5].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[3].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%=  top_tracks ? top_tracks.items[6].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[6].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[6].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[6].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%=  top_tracks ? top_tracks.items[7].album.images[0].url : "not found" %>" alt= ""></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[7].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[7].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[7].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%=  top_tracks ? top_tracks.items[8].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[8].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[8].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[8].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_tracks ? top_tracks.items[9].album.images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_tracks ? top_tracks.items[9].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_tracks ? top_tracks.items[9].album.artists[0].name : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_tracks ? top_tracks.items[9].album.name : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        </div>
-                     </div>
+              <% top_tracks.items.forEach(function(track) { %>
+                <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= track ? track.album.images[0].url : "not found" %>" alt="."></span></a></div>
+                  <div class="flex">
+                    <a href="#" class="item-author text-color item-except" data-abc="true"><%= track ? track.name : "not found" %></a>
+                    <div class="text-muted text-sm h-1x"><%= track ? track.album.artists[0].name : "not found" %></div>
                   </div>
-               </div>     
-               </div>  
+                  <div class="no-wrap">
+                    <div class="item-date text-muted text-sm d-none d-md-block"><%=  track ? track.album.name : "not found"%></div>
+                  </div>
+                  <div>
+                    <div class="item-action dropdown">
+                      <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                          <circle cx="12" cy="12" r="1"></circle>
+                          <circle cx="12" cy="5" r="1"></circle>
+                          <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                        <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+  
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    <div class="page-content page-container" id="page-content">
+      <div class="padding">
+        <div class="row">   
+          <h3 class="text-white">Top Artists</h3>
+          <div class="col-sm-16">
+
+          <div class="container-fluid d-flex justify-content-center">
+            <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move">
+
+              <% top_artists.items.forEach(function(artist) { %>
+                <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                  <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= artist ? artist.images[0].url : "not found" %>" alt="."></span></a></div>
+                  <div class="flex">
+                    <a href="#" class="item-author text-color" data-abc="true"><%= artist ? artist.name : "not found" %></a>
+                    <div class="item-except text-muted text-sm h-1x"><%= top_artists ? artist.genres : "not found" %></div>
+                  </div>
+                  <div class="no-wrap">
+                    <div class="item-date text-muted text-sm d-none d-md-block">Popularity: <%=  top_artists ? artist.popularity : "not found"%></div>
+                  </div>
+                  <div>
+                    <div class="item-action dropdown">
+                      <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                          <circle cx="12" cy="12" r="1"></circle>
+                          <circle cx="12" cy="5" r="1"></circle>
+                          <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                        <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+
             </div>
          </div>
-      
-      </td>
-      <td>
-         <div class="page-content page-container" id="page-content">
-            <div class="padding">
-               <div class="row">
-                  
-                  <div class="col-sm-16">
-                  <h3 class="text-white">Top Artists</h3>
-                     
-                  <div class="container-fluid d-flex justify-content-center">
-                     <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move">
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[0].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_artists ? top_artists.items[0].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[0].genres : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block">Popularity: <%=  top_artists ? top_artists.items[0].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[1].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[1].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[1].genres : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[1].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[2].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[2].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[2].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[2].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[3].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[3].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[3].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[3].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[4].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[4].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[4].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[4].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[5].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[5].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[5].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[5].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[6].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[6].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[6].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[6].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[7].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%=  top_artists ? top_artists.items[7].name : "not found"%></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[7].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[7].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[8].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_artists ? top_artists.items[8].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[8].genres : "not found"%></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[8].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
-                           <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= top_artists ? top_artists.items[9].images[0].url : "not found" %>" alt="."></span></a></div>
-                           <div class="flex">
-                              <a href="#" class="item-author text-color" data-abc="true"><%= top_artists ? top_artists.items[9].name : "not found" %></a>
-                              <div class="item-except text-muted text-sm h-1x"><%= top_artists ? top_artists.items[9].genres : "not found" %></div>
-                           </div>
-                           <div class="no-wrap">
-                              <div class="item-date text-muted text-sm d-none d-md-block"><%=  top_artists ? top_artists.items[9].popularity : "not found"%></div>
-                           </div>
-                           <div>
-                              <div class="item-action dropdown">
-                                 <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                       <circle cx="12" cy="12" r="1"></circle>
-                                       <circle cx="12" cy="5" r="1"></circle>
-                                       <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                 </a>
-                                 <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                    <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item trash" data-abc="true">Delete item</a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>     
-               </div>  
-            </div>
          </div>
-      </td>
-   </tr>
+        </div>
+      </div>
+    </div>
+  </td>
+  </tr>
 </table>
    
   
