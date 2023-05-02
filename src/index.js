@@ -187,7 +187,8 @@ app.get('/yourReport', async (req, res) => {
     req.session.spotify_user = user_info;
     req.session.save();
 
-    if (req.query.timeline == null) {
+    if (!req.query.timeline) {
+      console.log("here")
       res.render('pages/yourReport.ejs', {
         spotify_user: user_info,
         top_tracks: null,
@@ -199,6 +200,7 @@ app.get('/yourReport', async (req, res) => {
       const top_tracks = top_tracks_response.data;
       const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
       const top_artists = top_artists_response.data;
+      console.log(top_artists, top_tracks)
       res.render('pages/yourReport.ejs', {
         spotify_user: user_info,
         top_tracks: top_tracks,
