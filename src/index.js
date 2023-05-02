@@ -68,7 +68,16 @@ app.use(
 
 //for the home page
 app.get('/', (req, res) => {
-  res.render('pages/home.ejs');
+  var link = '/login';
+  var text = 'Login';
+  if (req.session.user) {
+    link = '/logout';
+    text = 'Logout';
+  }
+  res.render('pages/home.ejs', {
+    link: link,
+    text: text
+  });
 });
 
 app.get('/home_img', (req, res) => {
@@ -79,11 +88,17 @@ app.get('/home_img', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-res.render('pages/login')
+  res.render('pages/login', {
+    link: '/login',
+    text: 'Login'
+  })
 });
 
 app.get('/register', (req, res) => {
-res.render('pages/register', {});
+  res.render('pages/register', {
+    link: '/login',
+    text: 'Login'
+  });
 });
 
 // Register
@@ -97,7 +112,7 @@ app.post('/register', async (req, res) => {
   // Ensure non-null data is entered as registration information
   if (!req.body.username || !req.body.password) {
     console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: NULL was passed into API Route');
-    res.status(400).render('pages/register');
+    res.status(400).redirect('/register');
   }
 
   // After input validation, insert user into database
@@ -113,14 +128,14 @@ app.post('/register', async (req, res) => {
     .catch((err) => {
       console.log('CONSOLE.LOG FROM INDEX.JS ---  Account could not be registered');
       console.log(err);
-      res.status(500).render('pages/register');
+      res.status(500).redirect('/register');
     });
   }
 
   // Ensure current user does not already exist in database
   else {
     console.log('CONSOLE.LOG FROM INDEX.JS --- Account could not be registered: User already exists in database');
-    res.status(400).render('pages/register');
+    res.status(400).redirect('/register');
   }
 });
   
@@ -140,12 +155,12 @@ app.post('/login', async (req, res) => {
     }
     else {
       console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - Incorrect Password');
-      res.status(401).render('pages/login');
+      res.status(401).redirect('pages/login');
     }
   }
   else if (user == null) {
     console.log('CONSOLE.LOG FROM INDEX.JS --- User could not log in - User not found in database');
-    res.status(404).render('pages/login');
+    res.status(404).redirect('pages/login');
   }
 });
 
@@ -168,7 +183,9 @@ app.get('/extras', (req, res) => {
   if (req.session.user) {
     res.render('pages/extras.ejs', {
       name: 'test playlist',
-      track_uris: '["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]'
+      track_uris: '["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]', 
+      link: '/logout',
+      text: 'Logout'
     });
   }
   else {
@@ -178,6 +195,7 @@ app.get('/extras', (req, res) => {
 
 //for yourReport page
 app.get('/yourReport', async (req, res) => {
+  console.log(req.query.timeline);
   const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
   if (user_response.status == 401) {
     res.redirect('/refresh?redirect=/yourReport');
@@ -186,33 +204,28 @@ app.get('/yourReport', async (req, res) => {
     const user_info = user_response.data;
     req.session.spotify_user = user_info;
     req.session.save();
-
-    if (!req.query.timeline) {
-      console.log("here")
-      res.render('pages/yourReport.ejs', {
-        spotify_user: user_info,
-        top_tracks: null,
-        top_artists: null
-      });
+    var timeline = 'medium_term'
+    if (req.query.timeline) {
+      timeline = req.query.timeline;
     }
-    else {
-      const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-      const top_tracks = top_tracks_response.data;
-      const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '?time_range=' + req.query.timeline);
-      const top_artists = top_artists_response.data;
-      console.log(top_artists, top_tracks)
-      res.render('pages/yourReport.ejs', {
-        spotify_user: user_info,
-        top_tracks: top_tracks,
-        top_artists: top_artists
-      });
-    }
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline);
+    const top_tracks = top_tracks_response.data;
+    const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '&time_range=' + timeline);
+    const top_artists = top_artists_response.data;
+    console.log(top_artists, top_tracks)
+    res.render('pages/yourReport.ejs', {
+      spotify_user: user_info,
+      top_tracks: top_tracks,
+      top_artists: top_artists,
+      link: '/logout',
+      text: 'Logout'
+    });
   }
 });
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render('pages/login.ejs');
+  res.redirect('/login');
   console.log("Logged out successfully");
 })
 
@@ -358,7 +371,7 @@ app.get('/getUserTopTracks', (req, res) => {
     dataType: 'json',
     headers: {
       'Authorization': 'Bearer  ' + req.query.key,
-    },
+    }, 
   })
   .then(results => {
     res.send(results.data);
