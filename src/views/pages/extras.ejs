@@ -1,34 +1,266 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 <main>
-    <div class="container mt-4">
-		<div class="row">
-			<div class="col"></div>
-			<!-- THE REST OF YOUR HTML CODE GOES HERE -->
-			<div class="col-8">
-				<div class="row m-2">
-					<h2 class="mb-4">Login</h2>
-				</div>
-				<form action="/playlist" method="POST">
-					<div class="row m-2 mb-3">
-						<div class="col-10">
-							<input type="hidden" id="name" name="name" value="<%=name%>"/>
-						</div>
-					</div>
-					<div class="row m-2 mb-3">
-						<div class="col-10">
-							<input type="hidden" id="track_uris" name="track_uris" value="<%=track_uris%>"/>
-						</div>
-					</div>
-					<hr/>
-						<div class="col justify-content-end d-flex">
-							<button type="submit" class="btn btn-primary">Submit</button>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="col"></div>
-		</div>
+  <div class="container">
+    <img id = "profile-pic" src="<%= spotify_user.images[0]?.url %>" alt="display picture">
+	  <h1 class="text-white"><%="Welcome to Better Wrapped " + spotify_user.display_name%></h1>
+   
+
+    <h2 class ="text-white">Select a timeline:</h2>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+      Select Timeline
+      </button>
+      <div class="dropdown-menu" >
+        <a class="dropdown-item" href="/extras?timeline=long_term">year long</a>
+        <a class="dropdown-item" href="/extras?timeline=medium_term">last 6 months</a>
+        <a class="dropdown-item" href="/extras?timeline=short_term">1-2 months</a
+      </div>
+    </div>
   </div>
+
+  <table id = "infoContainer">
+    <tr width = "100%">
+    <td>
+      <div class="page-content page-container" id="page-content" >
+        <div class="padding">
+          <div class="row">
+            <h3 class="text-white">Top Tracks</h3>
+            <div class="col-sm-16">
+                      
+            <div class="container-fluid d-flex justify-content-center">
+              <div class="list list-row card" id="sortable" data-sortable-id="0" aria-dropeffect="move" >
+  
+                <% top_tracks.items.forEach(function(track) { %>
+                  <div class="list-item" data-id="9" data-item-sortable-id="0" draggable="true" role="option" aria-grabbed="false">
+                    <div><a href="#" data-abc="true"><span class="w-40 avatar gd-info"><img src="<%= track ? track.album.images[0].url : "not found" %>" alt="."></span></a></div>
+                    <div class="flex">
+                      <a href="#" class="item-author text-color item-except" data-abc="true"><%= track ? track.name : "not found" %></a>
+                      <div class="text-muted text-sm h-1x"><%= track ? track.album.artists[0].name : "not found" %></div>
+                    </div>
+                    <div class="no-wrap">
+                      <div class="item-date text-muted text-sm d-none d-md-block"><%=  track ? track.album.name : "not found"%></div>
+                    </div>
+                    <div>
+                      <div class="item-action dropdown">
+                        <a href="#" data-toggle="dropdown" class="text-muted" data-abc="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                          </svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                          <a class="dropdown-item" href="#" data-abc="true">See detail </a><a class="dropdown-item download" data-abc="true">Download </a><a class="dropdown-item edit" data-abc="true">Edit</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item trash" data-abc="true">Delete item</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+    
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+    </tr>
+  </table>
+
+  <div class="container pb-4 justify-content-center">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <h3 class ="text-white justify-content-center">Create a Playlist:</h3>
+    <form action="/playlist" method="POST" target="_blank">
+      <input type="text justify-content-center" id="name" name="name"/>
+      <input type="hidden" id="track_uris" name="track_uris" value="<%=track_uris%>"/>
+      <div class="justify-content-center d-flex">
+        <button type="submit" class="btn btn-primary">Create Playlist</button>
+      </div>
+    </form>
+  </div>
+  <div class="container py-4"></div>
 </main>
+
+<style>
+
+#profile-pic {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  border: 5px solid #165dcf;
+  box-shadow: 0 0 0 5px #f8f8f8;
+  width:10%;
+  margin:20px;
+}
+
+body {
+   background-color: #f9f9fa
+}
+
+.flex {
+   -webkit-box-flex: 1;
+   -ms-flex: 1 1 auto;
+   flex: 1 1 auto
+}
+
+@media (max-width:991.98px) {
+   .padding {
+       padding: 1.5rem
+   }
+}
+
+@media (max-width:767.98px) {
+   .padding {
+       padding: 1rem
+   }
+}
+
+.padding {
+   padding: 5rem
+}
+
+.card {
+   background: #fff;
+   border-width: 0;
+   border-radius: .25rem;
+   box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+   margin-bottom: 1.5rem
+}
+
+.card {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   min-width: 0;
+   word-wrap: break-word;
+   background-color: #fff;
+   background-clip: border-box;
+   border: 1px solid rgba(19, 24, 44, .125);
+   border-radius: .25rem
+}
+
+.list-item {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word
+}
+
+.list-item.block .media {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0
+}
+
+.list-item.block .list-content {
+  padding: 1rem
+}
+
+.w-40 {
+  width: 40px!important;
+  height: 40px!important
+}
+
+.avatar {
+  position: relative;
+  line-height: 1;
+  border-radius: 500px;
+  white-space: nowrap;
+  font-weight: 700;
+  border-radius: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 500px;
+  box-shadow: 0 5px 10px 0 rgba(50, 50, 50, .15)
+}
+
+.avatar img {
+  border-radius: inherit;
+  width: 100%
+}
+
+.gd-primary {
+  color: #fff;
+  border: none;
+  background: #448bff linear-gradient(45deg, #448bff, #44e9ff)
+}
+
+.flex {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto
+}
+
+.text-color {
+  color: #5e676f
+}
+
+.text-sm {
+  font-size: .825rem
+}
+
+.h-1x {
+  height: 1.25rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical
+}
+
+.no-wrap {
+  white-space: nowrap
+}
+
+.list-row .list-item {
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: .75rem .625rem;
+}
+
+.list-item {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.list-row .list-item>* {
+  padding-left: .625rem;
+  padding-right: .625rem;
+}
+
+.dropdown {
+  position: relative;
+}
+
+a:focus, a:hover {
+  text-decoration: none;
+}
+
+list-item{
+  background:white;
+}
+
+
+</style>
+
 <%- include ('../partials/footer') %>

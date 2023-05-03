@@ -179,18 +179,41 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 //for the extras page
-app.get('/extras', (req, res) => {
-  if (req.session.user) {
+app.get('/extras', async (req, res) => {
+  const user_response = await axios.get(url_concat + '/getUserInfo?key=' + req.session.user.access_token);
+
+  if (user_response.status == 401) {
+    res.redirect('/refresh?redirect=/extras');
+  }
+  else {
+    const user_info = user_response.data;
+    req.session.spotify_user = user_info;
+    req.session.save();
+
+    var timeline = 'medium_term'
+    if (req.query.timeline) {
+      timeline = req.query.timeline;
+    }
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=50');
+    const top_tracks = top_tracks_response.data;
+
+    var playlistArr = [];
+
+    for (let i =0; i <  top_tracks.items.length; i++) {
+        playlistArr.push(top_tracks.items[i].uri);
+    }
+
+    const playlist = JSON.stringify(playlistArr);
+
     res.render('pages/extras.ejs', {
-      name: 'test playlist',
-      track_uris: '["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]', 
+      spotify_user: user_info,
+      top_tracks: top_tracks,
+      track_uris: playlist,
       link: '/logout',
       text: 'Logout'
     });
   }
-  else {
-    res.redirect('/login');
-  }
+
 });
 
 //for yourReport page
@@ -452,13 +475,18 @@ app.post('/playlist', async (req, res) => {
 
   const create_playlist = create_playlist_response.data;
 
-  const add_tracks_response = await axios.post(url_concat + '/addTracks', {
+  axios.post(url_concat + '/addTracks', {
     playlist_id: create_playlist.id,
     key: req.session.user.access_token,
     track_uris: track_uri_array
-  });
+  })
+    .then(res.redirect(create_playlist.external_urls.spotify))
+    .catch(err => {
+      console.log(err);
+      res.redirect('/extras');
+    })
 
-  res.send(create_playlist);
+
 
 })
 
