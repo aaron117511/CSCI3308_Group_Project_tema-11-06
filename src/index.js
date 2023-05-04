@@ -1,7 +1,7 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-const url_concat = 'http://recitation-11-team-06.eastus.cloudapp.azure.com:3000';
+const url_concat = 'http://localhost:3000';
 const express = require('express'); // To build an application server or API
 const app = express();
 const path = require('path');
@@ -194,7 +194,7 @@ app.get('/extras', async (req, res) => {
     if (req.query.timeline) {
       timeline = req.query.timeline;
     }
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=50');
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=50&offset=2');
     const top_tracks = top_tracks_response.data;
 
     var playlistArr = [];
@@ -230,7 +230,7 @@ app.get('/yourReport', async (req, res) => {
     if (req.query.timeline) {
       timeline = req.query.timeline;
     }
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=10');
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=10&offset=2');
     const top_tracks = top_tracks_response.data;
     const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '&time_range=' + timeline+ '&limit=10');
     const top_artists = top_artists_response.data;
