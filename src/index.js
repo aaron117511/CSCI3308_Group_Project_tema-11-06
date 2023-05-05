@@ -475,8 +475,6 @@ app.post('/playlist', async (req, res) => {
 
   const create_playlist = create_playlist_response.data;
 
-  await delay(2000);
-
   axios.post(url_concat + '/addTracks', {
     playlist_id: create_playlist.id,
     key: req.session.user.access_token,
