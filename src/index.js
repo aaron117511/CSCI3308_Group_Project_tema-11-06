@@ -230,7 +230,7 @@ app.get('/yourReport', async (req, res) => {
     if (req.query.timeline) {
       timeline = req.query.timeline;
     }
-    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=10&offset=2');
+    const top_tracks_response = await axios.get(url_concat + '/getUserTopTracks?key=' + req.session.user.access_token + '&time_range=' + timeline + '&limit=10');
     const top_tracks = top_tracks_response.data;
     const top_artists_response = await axios.get(url_concat + '/getUserTopArtists?key=' + req.session.user.access_token + '&time_range=' + timeline+ '&limit=10');
     const top_artists = top_artists_response.data;
@@ -397,7 +397,7 @@ app.get('/getUserTopTracks', (req, res) => {
     limit = '&limit=' + String(req.query.limit);
   }
   axios({
-    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange + limit,
+    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange + limit + '&offset=2',
     method: 'GET',
     dataType: 'json',
     headers: {
