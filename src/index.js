@@ -479,13 +479,11 @@ app.post('/playlist', async (req, res) => {
     playlist_id: create_playlist.id,
     key: req.session.user.access_token,
     track_uris: track_uri_array
-  })
-    .then(res.redirect(create_playlist.external_urls.spotify))
-    .catch(error => {
-      console.log(error);
-      res.redirect('/extras');
-    });
+  });
 
+  await delay(1000);
+
+  res.redirect(create_playlist.external_urls.spotify);
 })
 
 app.post('/createPlaylist', (req, res) => {
