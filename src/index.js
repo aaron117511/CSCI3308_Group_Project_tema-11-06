@@ -1,7 +1,7 @@
 // **********************************
 // -----IMPORT DEPENDENCIES HERE-----
 // **********************************
-const url_concat = 'http://localhost:3000';
+const url_concat = 'http://recitation-11-team-06.eastus.cloudapp.azure.com:3000';
 const express = require('express'); // To build an application server or API
 const app = express();
 const path = require('path');
