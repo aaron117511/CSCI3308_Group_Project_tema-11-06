@@ -475,18 +475,13 @@ app.post('/playlist', async (req, res) => {
 
   const create_playlist = create_playlist_response.data;
 
-  axios.post(url_concat + '/addTracks', {
+  const add_tracks_response = await axios.post(url_concat + '/addTracks', {
     playlist_id: create_playlist.id,
     key: req.session.user.access_token,
     track_uris: track_uri_array
-  })
-    .then(res.redirect(create_playlist.external_urls.spotify))
-    .catch(err => {
-      console.log(err);
-      res.redirect('/extras');
-    })
+  });
 
-
+  res.redirect(create_playlist.external_urls.spotify);
 
 })
 
