@@ -397,7 +397,7 @@ app.get('/getUserTopTracks', (req, res) => {
     limit = '&limit=' + String(req.query.limit);
   }
   axios({
-    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange + limit + '&offset=2',
+    url: `https://api.spotify.com/v1/me/top/tracks` + timeRange + limit,
     method: 'GET',
     dataType: 'json',
     headers: {
